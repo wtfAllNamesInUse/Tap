@@ -8,6 +8,7 @@ namespace TapTapTap.Core.FSM
         public override int StateID => EntityStates.Attack;
 
         private EntityGatherer entityGatherer;
+
         private static readonly int Attacking = Animator.StringToHash("IsAttacking");
 
         [Inject]
@@ -19,6 +20,8 @@ namespace TapTapTap.Core.FSM
         public override void OnEnter()
         {
             base.OnEnter();
+
+            Owner.Attributes.ApplyAttributeModifier(AttributeDefinition.Speed, -0.25f);
 
             Owner.Animator.SetTrigger(Attacking);
             Owner.AnimatorCallbacks.OnAnimationStateHasChanged += OnAnimationStateHasChanged;
@@ -42,9 +45,15 @@ namespace TapTapTap.Core.FSM
                     p => p.Data.EntityArchetype.Fraction != myFraction, 1.5f);
 
                 if (enemy != null) {
-                    Owner.StateMachine.EnqueueState(0);
+                    Owner.StateMachine.EnqueueState(Owner.IsPlayer ? EntityStates.Idle : EntityStates.Attack);
                 }
-                Owner.StateMachine.FinishState(EntityStates.Run);
+
+                if (Owner.IsPlayer) {
+                    Owner.StateMachine.FinishState(EntityStates.Run);
+                }
+                else {
+                    Owner.StateMachine.FinishState(EntityStates.Idle);
+                }
             }
             else if (animationState == AnimatorCallbacks.AnimationState.Attack) {
                 if (Blackboard.TargetEntity != null) {

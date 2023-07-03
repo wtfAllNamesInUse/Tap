@@ -17,6 +17,9 @@ namespace TapTapTap.Core
         public EntityStateMachine StateMachine => stateMachine;
         public EntityData Data => data;
 
+        public bool IsPlayer => Data.EntityArchetype.Fraction == EntityFraction.Player;
+        public bool IsAlive => isAlive;
+
         [SerializeField]
         private Animator animator;
 
@@ -35,6 +38,9 @@ namespace TapTapTap.Core
         private EntityData data;
         private EntityStateMachine stateMachine;
         private EntityGatherer entityGatherer;
+        private HealthBar healthBar;
+
+        private bool isAlive = true;
 
         private static readonly int IsHit = Animator.StringToHash("IsHit");
         private static readonly int IsDie = Animator.StringToHash("IsDie");
@@ -45,13 +51,15 @@ namespace TapTapTap.Core
         public void Inject(
             EntityData data,
             EntityStateMachine.Factory stateMachineFactory,
-            EntityGatherer entityGatherer)
+            EntityGatherer entityGatherer,
+            HealthBar healthBar)
         {
             this.data = data;
             stateMachine = stateMachineFactory.Create(this);
             attributes.DoInit(this.data.EntityArchetype.Attributes, OnAttributeHasChanged);
             this.entityGatherer = entityGatherer;
             this.entityGatherer.Register(this);
+            this.healthBar = healthBar;
             movement?.Init(this);
 
             Initialize();
@@ -69,18 +77,21 @@ namespace TapTapTap.Core
                     Die();
                 }
                 else {
-                    Animator.SetTrigger(IsHit);
+                    //Animator.SetTrigger(IsHit);
                 }
             }
         }
 
         private async void Die()
         {
+            isAlive = false;
+
             Animator.SetTrigger(IsHit);
             Animator.SetBool(IsDie, true);
 
             entityGatherer.Unregister(this);
             StateMachine.Dispose();
+            healthBar.Dispose();
 
             await Task.Delay(DieMsDelay);
 
@@ -98,7 +109,13 @@ namespace TapTapTap.Core
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            StateMachine.ChangeState(EntityStates.Idle);
+            if (IsPlayer) {
+                StateMachine.ChangeState(EntityStates.Idle);
+            }
+            else {
+                StateMachine.Blackboard.TargetEntity = collision.gameObject.GetComponent<Entity>();
+                StateMachine.ChangeState(EntityStates.Attack);
+            }
         }
 
         public class Factory : PlaceholderFactory<Object, EntityData, Entity>

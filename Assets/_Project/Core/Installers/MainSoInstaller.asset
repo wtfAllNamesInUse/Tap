@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: MainSoInstaller
   m_EditorClassIdentifier: 
   entityConfig: {fileID: 11400000, guid: 737b268fcf4b17140917c32e25d7c655, type: 2}
+  screenPrefabs: {fileID: 11400000, guid: 4340daa847c1ba14893743217369cbd0, type: 2}
+  gameplaySettings: {fileID: 11400000, guid: 1dca1bbc0416f1e4fa43a1e086f937e0, type: 2}

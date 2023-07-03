@@ -5,25 +5,28 @@ using Zenject;
 
 namespace TapTapTap.Core
 {
-    public class SimpleWaveController : IInitializable, IDisposable
+    public class DistanceBasedWaveController : IInitializable, IDisposable, IWavesController
     {
-        private const int SpawnTimeMs = 5000;
-
         private readonly SignalBus signalBus;
         private readonly SpawnerSystem spawnerSystem;
         private readonly PositionProvider positionProvider;
         private readonly GameStateData gameStateData;
+        private readonly DistanceEvaluator distanceEvaluator;
 
-        public SimpleWaveController(
+        private int spawnedEnemiesCount;
+
+        public DistanceBasedWaveController(
             SignalBus signalBus,
             SpawnerSystem spawnerSystem,
             PositionProvider positionProvider,
-            GameStateData gameStateData)
+            GameStateData gameStateData,
+            DistanceEvaluator distanceEvaluator)
         {
             this.signalBus = signalBus;
             this.spawnerSystem = spawnerSystem;
             this.positionProvider = positionProvider;
             this.gameStateData = gameStateData;
+            this.distanceEvaluator = distanceEvaluator;
         }
 
         public void Initialize()
@@ -44,16 +47,23 @@ namespace TapTapTap.Core
             }
         }
 
-        private async void RunController()
+        public async void RunController()
         {
             while (true) {
+                var distance = (int)distanceEvaluator.Distance;
+                if (distance < 6 * spawnedEnemiesCount) {
+                    await Task.Delay(500);
+                    continue;
+                }
+
                 var spawnedEnemyPosition = gameStateData.Player.transform.position;
                 spawnedEnemyPosition.y = 0;
-                spawnedEnemyPosition.x += 5.0f;
+                spawnedEnemyPosition.x += 6.0f;
 
                 spawnerSystem.SpawnEntity("ENEMY", EntityDirection.Left, positionProvider.EnemyStart,
                     spawnedEnemyPosition);
-                await Task.Delay(SpawnTimeMs);
+
+                spawnedEnemiesCount++;
 
                 if (!Application.isPlaying) {
                     return;

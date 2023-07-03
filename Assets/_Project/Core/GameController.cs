@@ -9,10 +9,13 @@ namespace TapTapTap.Core
         private readonly SignalBus signalBus;
         private readonly SpawnerSystem spawnerSystem;
         private readonly PositionProvider positionProvider;
-        private readonly ClickDetector tapDetector;
+        private readonly ClickDetector clickDetector;
         private readonly EntityGatherer entityGatherer;
         private readonly CameraController cameraController;
         private readonly GameStateData gameStateData;
+        private readonly ScreenController screenController;
+        private readonly ITutorialsContainer tutorialsContainer;
+        private readonly IBlocker playerInputBlocker;
 
         private Entity Player => gameStateData.Player;
 
@@ -20,37 +23,59 @@ namespace TapTapTap.Core
             SignalBus signalBus,
             SpawnerSystem spawnerSystem,
             PositionProvider positionProvider,
-            ClickDetector tapDetector,
+            ClickDetector clickDetector,
             EntityGatherer entityGatherer,
             CameraController cameraController,
-            GameStateData gameStateData)
+            GameStateData gameStateData,
+            ScreenController screenController,
+            ITutorialsContainer tutorialsContainer,
+            IBlocker playerInputBlocker)
         {
             this.signalBus = signalBus;
             this.spawnerSystem = spawnerSystem;
             this.positionProvider = positionProvider;
-            this.tapDetector = tapDetector;
+            this.clickDetector = clickDetector;
             this.entityGatherer = entityGatherer;
             this.cameraController = cameraController;
             this.gameStateData = gameStateData;
+            this.screenController = screenController;
+            this.tutorialsContainer = tutorialsContainer;
+            this.playerInputBlocker = playerInputBlocker;
+            
+            signalBus.Subscribe<GameStateChangedSignal>(OnGameStateChanged);
         }
 
         public void Initialize()
         {
-            gameStateData.Player =
-                spawnerSystem.SpawnEntity("PLAYER", EntityDirection.Right, positionProvider.PlayerStart);
-            cameraController.Initialize(Player);
-
-            signalBus.Fire(new GameStateChangedSignal() { NewGameState = GameState.NewGame });
-            tapDetector.OnTap += OnTap;
+            screenController.ShowScreen<WelcomeScreen>();
         }
 
         public void Dispose()
         {
-            tapDetector.OnTap -= OnTap;
+            clickDetector.OnClick -= OnClick;
         }
 
-        private void OnTap()
+        private async void OnGameStateChanged(GameStateChangedSignal signal)
         {
+            gameStateData.Player =
+                spawnerSystem.SpawnEntity("PLAYER", EntityDirection.Right, positionProvider.PlayerStart);
+            gameStateData.OriginalPlayerPosition = gameStateData.Player.transform.position;
+
+            cameraController.Initialize(Player);
+
+            await tutorialsContainer.TryShowTutorials();
+
+            clickDetector.OnClick += OnClick;
+
+            screenController.ShowScreen<StatsBarScreen>();
+        }
+
+        private void OnClick()
+        {
+            if (playerInputBlocker.IsBlocked || !Player.IsAlive) {
+                return;
+            }
+
             var myFraction = Player.Data.EntityArchetype.Fraction;
             var enemy = entityGatherer.GetClosestEntityMatchingPredicate(Player.transform,
                 p => p.Data.EntityArchetype.Fraction != myFraction, 1.5f);

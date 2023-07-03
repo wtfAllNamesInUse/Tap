@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12fcffafa94c3d40af3de9ee2cbf7d4, type: 3}
+  m_Name: UiPrefabs
+  m_EditorClassIdentifier: 
+  uiPrefabs:
+  - name: Welcome_Screen
+    gameObject: {fileID: 7063492696373076551, guid: 69911a3de3219e840972110ab4e68f4c, type: 3}
+  - name: StatsBarScreen
+    gameObject: {fileID: 7063492696373076551, guid: 97ba336d9d8b2f34f88184025e25b125, type: 3}
+  - name: Healthbar
+    gameObject: {fileID: 3597666361051338865, guid: c360a0b5a940708499f2086372a24465, type: 3}
+  - name: LevelCompletedScreen
+    gameObject: {fileID: 7063492696373076551, guid: 5ae15f625ee499f42b3d201350930e0b, type: 3}
+  - name: SimplePopupScreen
+    gameObject: {fileID: 7063492696373076551, guid: 4462c4c92e4fa154d8eb04140451d1b7, type: 3}
+  - name: PerkChooserScreen
+    gameObject: {fileID: 7063492696373076551, guid: 6377c6acb37945545b18b6bd06e2349c, type: 3}

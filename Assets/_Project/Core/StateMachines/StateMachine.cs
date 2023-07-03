@@ -43,9 +43,11 @@ namespace TapTapTap.Core.FSM
             pendingStates = new Queue<State>();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             tickableManager.Remove(this);
+            FinishState(EntityStates.Idle);
+            // CurrentState?.OnExit();
         }
 
         public void Tick()

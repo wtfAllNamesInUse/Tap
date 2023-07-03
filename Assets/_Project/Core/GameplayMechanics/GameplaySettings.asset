@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a433713c05b614194398b13846e4b6, type: 3}
+  m_Name: GameplaySettings
+  m_EditorClassIdentifier: 
+  levelTimeS: 30
+  healthRemovalTimerS: 1.5
+  executeBelowSpeed: 1
+  executeAboveSpeed: 2.25
+  healthToRemove: -25
+  delayHealthRemovalFromLevelStart: 7.5
+  speedIncreaseOnTap: 0.2
+  maxSpeed: 3
+  speedRemovalTimerS: 0.5
+  speedRemovalValue: -0.15

@@ -6,12 +6,12 @@ namespace TapTapTap.Core
 {
     public class ClickDetector : ITickable
     {
-        public event Action OnTap;
+        public event Action OnClick;
 
         public void Tick()
         {
             if (Input.GetMouseButtonUp(0)) {
-                OnTap?.Invoke();
+                OnClick?.Invoke();
             }
         }
     }

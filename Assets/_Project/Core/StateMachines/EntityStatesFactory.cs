@@ -28,12 +28,8 @@ namespace TapTapTap.Core.FSM
             var result = new List<EntityState> {
                 idleStateFactory.Create(),
                 runStateFactory.Create(),
+                attackStateFactory.Create(),
             };
-
-            var isPlayer = owner.Owner.Data.EntityArchetype.Fraction == EntityFraction.Player;
-            if (isPlayer) {
-                result.Add(attackStateFactory.Create());
-            }
 
             return result;
         }

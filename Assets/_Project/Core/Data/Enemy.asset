@@ -16,5 +16,9 @@ MonoBehaviour:
   prefab: {fileID: 2082831725570257987, guid: 5f34ae6fb1cf7034d88041f6fb71fe1b, type: 3}
   fraction: 1
   attributes:
+  - attribute: 1
+    value: 7
+  - attribute: 2
+    value: 0
   - attribute: 0
     value: 100

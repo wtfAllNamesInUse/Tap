@@ -19,4 +19,6 @@ MonoBehaviour:
   - attribute: 1
     value: 34
   - attribute: 2
-    value: 3
+    value: 0
+  - attribute: 0
+    value: 100
