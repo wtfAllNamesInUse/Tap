@@ -41,7 +41,7 @@ namespace TapTapTap.Core
             this.screenController = screenController;
             this.tutorialsContainer = tutorialsContainer;
             this.playerInputBlocker = playerInputBlocker;
-            
+
             signalBus.Subscribe<GameStateChangedSignal>(OnGameStateChanged);
         }
 
@@ -57,8 +57,8 @@ namespace TapTapTap.Core
 
         private async void OnGameStateChanged(GameStateChangedSignal signal)
         {
-            gameStateData.Player =
-                spawnerSystem.SpawnEntity("PLAYER", EntityDirection.Right, positionProvider.PlayerStart);
+            gameStateData.Player = spawnerSystem
+                .SpawnEntity("PLAYER", positionProvider.PlayerStart);
             gameStateData.OriginalPlayerPosition = gameStateData.Player.transform.position;
 
             cameraController.Initialize(Player);

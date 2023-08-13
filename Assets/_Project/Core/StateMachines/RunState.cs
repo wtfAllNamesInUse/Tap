@@ -3,15 +3,25 @@ using Zenject;
 
 namespace TapTapTap.Core.FSM
 {
-    public class RunState : EntityState
+    public class RunState : State
     {
         private static readonly int IsRunning = Animator.StringToHash("IsRunning");
         public override int StateID => EntityStates.Run;
 
+        private Movement movement;
+        private EntityView entityView;
+
+        [Inject]
+        protected void Initialize(Movement movement, EntityView entityView)
+        {
+            this.movement = movement;
+            this.entityView = entityView;
+        }
+
         public override void OnEnter()
         {
-            Owner.Animator.SetBool(IsRunning, true);
-            Owner.Movement.IsMoving = true;
+            entityView.Animator.SetBool(IsRunning, true);
+            movement.IsMoving = true;
         }
 
         public override void Tick()
@@ -20,8 +30,8 @@ namespace TapTapTap.Core.FSM
 
         public override void OnExit()
         {
-            Owner.Animator.SetBool(IsRunning, false);
-            Owner.Movement.IsMoving = false;
+            entityView.Animator.SetBool(IsRunning, false);
+            movement.IsMoving = false;
         }
 
         public class Factory : PlaceholderFactory<RunState>

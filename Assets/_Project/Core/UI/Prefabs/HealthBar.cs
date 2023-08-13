@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace TapTapTap.Core
 {
@@ -13,13 +14,19 @@ namespace TapTapTap.Core
         private new Camera camera;
         private bool isVisible;
 
-        public void InitWithEntity(
+        [Inject]
+        public void Inject(
             Entity entity,
             Camera camera)
         {
             this.entity = entity;
             this.camera = camera;
 
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             entity.Attributes.OnAttributeHasChanged += OnAttributeHasChanged;
             SetIsVisible(true);
             UpdatePosition();
@@ -59,6 +66,10 @@ namespace TapTapTap.Core
 
             entity.Attributes.OnAttributeHasChanged -= OnAttributeHasChanged;
             Destroy(gameObject);
+        }
+
+        public class Factory : PlaceholderFactory<HealthBar>
+        {
         }
     }
 }

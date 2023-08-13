@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TapTapTap.Core.FSM;
 using UnityEngine;
 using Zenject;
+using Zenject.SpaceFighter;
 
 namespace TapTapTap.Core
 {
@@ -19,6 +20,9 @@ namespace TapTapTap.Core
         [SerializeField]
         private new Camera camera;
 
+        [SerializeField]
+        private GameObject entity;
+
         public override void InstallBindings()
         {
             InstallSignals();
@@ -29,20 +33,10 @@ namespace TapTapTap.Core
             Container.Bind<SpawnerSystem>().AsSingle();
             Container.Bind<ArchetypeProvider>().AsSingle();
 
-            Container.BindFactory<Object, EntityData, Entity, Entity.Factory>()
-                .FromFactory<EntityFactory>();
+            Container.BindFactory<EntityData, Entity, Entity.Factory>().FromSubContainerResolve().ByNewPrefabInstaller<EntityInstaller>(entity);
 
             Container.BindInstance(positionProvider).AsSingle();
             Container.BindInterfacesTo<DistanceBasedWaveController>().AsSingle();
-
-            Container.BindFactory<IOwner, EntityStateMachine, EntityStateMachine.Factory>();
-            Container.BindFactory<IOwner, List<EntityState>, EntityStatesFactory>()
-                .FromFactory<EntityStatesCustomFactory>();
-            Container.BindFactory<Blackboard, Blackboard.Factory>();
-
-            Container.BindFactory<IdleState, IdleState.Factory>();
-            Container.BindFactory<RunState, RunState.Factory>();
-            Container.BindFactory<AttackState, AttackState.Factory>();
 
             Container.BindInterfacesTo<GameController>().AsSingle();
 

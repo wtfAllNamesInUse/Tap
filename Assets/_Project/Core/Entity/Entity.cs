@@ -6,12 +6,9 @@ using Zenject;
 namespace TapTapTap.Core
 {
     [SelectionBase]
-    public class Entity : MonoBehaviour, IOwner
+    public class Entity : MonoBehaviour
     {
-        public Entity Owner => this;
-        public Animator Animator => animator;
-        public AnimatorCallbacks AnimatorCallbacks => animatorCallbacks;
-        public GameObject WeaponRoot => weaponRoot;
+        public Animator Animator => entityView.Animator;
         public Attributes Attributes => attributes;
         public Movement Movement => movement;
         public EntityStateMachine StateMachine => stateMachine;
@@ -20,14 +17,7 @@ namespace TapTapTap.Core
         public bool IsPlayer => Data.EntityArchetype.Fraction == EntityFraction.Player;
         public bool IsAlive => isAlive;
 
-        [SerializeField]
-        private Animator animator;
-
-        [SerializeField]
-        private AnimatorCallbacks animatorCallbacks;
-
-        [SerializeField]
-        private GameObject weaponRoot;
+        private EntityView entityView;
 
         [SerializeField]
         private Attributes attributes;
@@ -52,31 +42,37 @@ namespace TapTapTap.Core
             EntityData data,
             EntityStateMachine.Factory stateMachineFactory,
             EntityGatherer entityGatherer,
-            HealthBar healthBar)
+            EntityView.Factory entityViewFactory,
+            DiContainer container, // TODO: move this to factories
+            HealthBar.Factory healthBarFactory)
         {
             this.data = data;
-            stateMachine = stateMachineFactory.Create(this);
-            attributes.DoInit(this.data.EntityArchetype.Attributes, OnAttributeHasChanged);
             this.entityGatherer = entityGatherer;
             this.entityGatherer.Register(this);
-            this.healthBar = healthBar;
-            movement?.Init(this);
 
-            Initialize();
-        }
+            healthBar = healthBarFactory.Create();
 
-        private void Initialize()
-        {
-            SetDirection(data.Direction);
+            attributes.DoInit(this.data.EntityArchetype.Attributes, OnAttributeHasChanged);
+            movement.Init(this);
+
+            entityView = entityViewFactory.Create(data.EntityArchetype.Prefab);
+            entityView.transform.SetParent(transform);
+
+            stateMachine = stateMachineFactory.Create();
+            container.BindInstance(stateMachine);
+            stateMachine.Initialize();
         }
 
         private void OnAttributeHasChanged(AttributeDefinition attribute, float currentValue, float previousValue)
         {
-            if (attribute == AttributeDefinition.Health) {
-                if (currentValue <= 0.0f) {
+            if (attribute == AttributeDefinition.Health)
+            {
+                if (currentValue <= 0.0f)
+                {
                     Die();
                 }
-                else {
+                else
+                {
                     //Animator.SetTrigger(IsHit);
                 }
             }
@@ -98,27 +94,20 @@ namespace TapTapTap.Core
             Destroy(gameObject);
         }
 
-        public void SetDirection(EntityDirection direction)
-        {
-            var currentDirection = transform.localScale;
-            currentDirection.x *= (direction == EntityDirection.Right) ? -1 : 1;
-            transform.localScale = currentDirection;
-
-            data.Direction = direction;
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (IsPlayer) {
+            if (IsPlayer)
+            {
                 StateMachine.ChangeState(EntityStates.Idle);
             }
-            else {
+            else
+            {
                 StateMachine.Blackboard.TargetEntity = collision.gameObject.GetComponent<Entity>();
                 StateMachine.ChangeState(EntityStates.Attack);
             }
         }
 
-        public class Factory : PlaceholderFactory<Object, EntityData, Entity>
+        public class Factory : PlaceholderFactory<EntityData, Entity>
         {
         }
     }

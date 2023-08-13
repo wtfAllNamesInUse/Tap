@@ -15,28 +15,27 @@ namespace TapTapTap.Core
             this.archetypeProvider = archetypeProvider;
         }
 
-        public Entity SpawnEntity(string name, EntityDirection direction)
+        public Entity SpawnEntity(string name)
         {
             var archetype = archetypeProvider.GetArchetype(name);
-            var entity = entityFactory.Create(archetype.Prefab, new EntityData {
-                Direction = direction,
+            var entity = entityFactory.Create(new EntityData {
                 EntityArchetype = archetype,
             });
 
             return entity;
         }
 
-        public Entity SpawnEntity(string name, EntityDirection direction, Transform parent)
+        public Entity SpawnEntity(string name, Transform parent)
         {
-            var entity = SpawnEntity(name, direction);
+            var entity = SpawnEntity(name);
             entity.transform.SetParent(parent, false);
 
             return entity;
         }
 
-        public Entity SpawnEntity(string name, EntityDirection direction, Transform parent, Vector3 position)
+        public Entity SpawnEntity(string name, Transform parent, Vector3 position)
         {
-            var entity = SpawnEntity(name, direction, parent);
+            var entity = SpawnEntity(name, parent);
             entity.transform.localPosition = position;
 
             return entity;

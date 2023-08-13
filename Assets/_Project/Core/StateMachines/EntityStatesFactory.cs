@@ -3,11 +3,11 @@ using Zenject;
 
 namespace TapTapTap.Core.FSM
 {
-    public class EntityStatesFactory : PlaceholderFactory<IOwner, List<EntityState>>
+    public class EntityStatesFactory : PlaceholderFactory<List<State>>
     {
     }
 
-    public class EntityStatesCustomFactory : IFactory<IOwner, List<EntityState>>
+    public class EntityStatesCustomFactory : IFactory<List<State>>
     {
         private readonly IdleState.Factory idleStateFactory;
         private readonly RunState.Factory runStateFactory;
@@ -23,9 +23,9 @@ namespace TapTapTap.Core.FSM
             this.attackStateFactory = attackStateFactory;
         }
 
-        public List<EntityState> Create(IOwner owner)
+        public List<State> Create()
         {
-            var result = new List<EntityState> {
+            var result = new List<State> {
                 idleStateFactory.Create(),
                 runStateFactory.Create(),
                 attackStateFactory.Create(),
