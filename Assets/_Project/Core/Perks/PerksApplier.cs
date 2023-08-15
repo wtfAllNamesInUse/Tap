@@ -8,15 +8,18 @@ namespace TapTapTap.Core
         private readonly SavedData savedData;
         private readonly SignalBus signalBus;
         private readonly GameStateData gameStateData;
+        private readonly PerksConfig perksConfig;
 
         public PerksApplier(
             SavedData savedData,
             SignalBus signalBus,
-            GameStateData gameStateData)
+            GameStateData gameStateData,
+            PerksConfig perksConfig)
         {
             this.savedData = savedData;
             this.signalBus = signalBus;
             this.gameStateData = gameStateData;
+            this.perksConfig = perksConfig;
         }
 
         public void Initialize()
@@ -31,13 +34,18 @@ namespace TapTapTap.Core
 
         private void OnGameStateChanged(GameStateChangedSignal signal)
         {
-            var playerAttributes = gameStateData.Player.Attributes;
-            for (var i = 0; i < savedData.Damage10PerksCount; i++) {
-                playerAttributes.ApplyAttributeModifier(AttributeDefinition.Damage, 10.0f);
+            var allPerks = perksConfig.Perks;
+            foreach (var perkArchetype in allPerks) {
+                var count = savedData.GetPerkCount(perkArchetype.PerkName);
+                Apply(perkArchetype, count);
             }
+        }
 
-            for (var i = 0; i < savedData.Health25PerksCount; i++) {
-                playerAttributes.ApplyAttributeModifier(AttributeDefinition.Health, 25.0f);
+        public void Apply(PerkArchetype perkArchetype, int count)
+        {
+            var playerAttributes = gameStateData.Player.Attributes;
+            foreach (var attribute in perkArchetype.Attributes) {
+                playerAttributes.ApplyAttributeModifier(attribute.attribute, attribute.value * count);
             }
         }
     }

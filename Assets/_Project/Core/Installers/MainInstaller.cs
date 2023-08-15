@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using TapTapTap.Core.FSM;
 using UnityEngine;
 using Zenject;
-using Zenject.SpaceFighter;
 
 namespace TapTapTap.Core
 {
@@ -23,6 +21,9 @@ namespace TapTapTap.Core
         [SerializeField]
         private GameObject entity;
 
+        [SerializeField]
+        private DamagePopup damagePopupPrefab;
+
         public override void InstallBindings()
         {
             InstallSignals();
@@ -33,7 +34,8 @@ namespace TapTapTap.Core
             Container.Bind<SpawnerSystem>().AsSingle();
             Container.Bind<ArchetypeProvider>().AsSingle();
 
-            Container.BindFactory<EntityData, Entity, Entity.Factory>().FromSubContainerResolve().ByNewPrefabInstaller<EntityInstaller>(entity);
+            Container.BindFactory<EntityData, Entity, Entity.Factory>().FromSubContainerResolve()
+                .ByNewPrefabInstaller<EntityInstaller>(entity);
 
             Container.BindInstance(positionProvider).AsSingle();
             Container.BindInterfacesTo<DistanceBasedWaveController>().AsSingle();
@@ -46,7 +48,16 @@ namespace TapTapTap.Core
             Container.BindInstance(rootCanvas).AsSingle();
             Container.BindInstance(camera).AsSingle();
             Container.Bind<ScreenController>().AsSingle();
+
+            Container.Bind<IUiPrefabProvider>().To<UiPrefabProviderFromProviders>().AsSingle()
+                .WhenInjectedInto(typeof(ScreenController), typeof(HealthBarFactory));
+            Container.Bind<IUiPrefabProvider>().To<UiPrefabProviderFromPool>().AsSingle();
             Container.Bind<IUiPrefabProvider>().To<UiPrefabProviderFromScriptableObject>().AsSingle();
+
+            Container.BindMemoryPool<DamagePopup, DamagePopup.Pool>()
+                .WithInitialSize(5)
+                .FromComponentInNewPrefab(damagePopupPrefab)
+                .UnderTransform(rootCanvas.transform);
 
             InstallTutorials();
 
@@ -63,16 +74,20 @@ namespace TapTapTap.Core
             Container.BindInterfacesTo<LevelFinishEvaluator>().AsSingle();
 
             Container.BindInterfacesTo<PerksApplier>().AsSingle();
+            Container.Bind<IPerkProvider>().To<RandomPerkProvider>().AsSingle();
         }
 
         private void InstallGameplayMechanics()
         {
-            Container.BindInterfacesTo<HealthRemovalMechanic>().AsSingle().NonLazy();
-            Container.BindInterfacesTo<SpeedRemovalMechanic>().AsSingle().NonLazy();
+            // TODO: atm we have to create mechanic as startup because we use ITickable
+            // TODO: lets convert it to use LazyInject and create them only when necessary/ enabled
+            Container.Bind(typeof(IGameplayMechanic), typeof(ITickable)).To<HealthRemovalMechanic>().AsSingle();
+            Container.Bind(typeof(IGameplayMechanic), typeof(ITickable)).To<SpeedRemovalMechanic>().AsSingle();
         }
 
         private void InstallTimers()
         {
+            // TODO: lets remove all BindInterfacesAndSelfTo and similiars
             Container.BindInterfacesAndSelfTo<GameplayTimersContainer>().AsSingle().NonLazy();
             Container.BindFactory<string, Timer, Timer.Factory>();
         }

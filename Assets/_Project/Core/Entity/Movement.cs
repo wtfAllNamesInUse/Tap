@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 namespace TapTapTap.Core
 {
@@ -6,11 +7,12 @@ namespace TapTapTap.Core
     {
         public bool IsMoving { get; set; }
 
-        private Entity entity;
+        private Attributes attributes;
 
-        public void Init(Entity entity)
+        [Inject]
+        public void Inject(Attributes attributes)
         {
-            this.entity = entity;
+            this.attributes = attributes;
         }
 
         private void Update()
@@ -19,7 +21,7 @@ namespace TapTapTap.Core
                 return;
             }
 
-            var speed = entity.Attributes.GetAttributeValue(AttributeDefinition.Speed);
+            var speed = attributes.GetAttributeValue(AttributeDefinition.Speed);
             transform.Translate(speed * Time.deltaTime, 0.0f, 0.0f);
         }
     }

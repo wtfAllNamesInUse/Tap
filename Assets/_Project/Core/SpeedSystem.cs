@@ -3,6 +3,7 @@ using Zenject;
 
 namespace TapTapTap.Core
 {
+    // TODO: lets convert it to IGameplayMechanic
     public class SpeedSystem : IInitializable, IDisposable
     {
         private readonly ClickDetector clickDetector;

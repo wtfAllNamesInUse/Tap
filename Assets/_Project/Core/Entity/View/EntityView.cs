@@ -17,7 +17,16 @@ namespace TapTapTap.Core
 
         [SerializeField]
         private GameObject weaponRoot;
+        
+        private static readonly int IsHit = Animator.StringToHash("IsHit");
+        private static readonly int IsDie = Animator.StringToHash("IsDie");
 
+        public void PlayDieAnimation()
+        {
+            Animator.SetTrigger(IsHit);
+            Animator.SetBool(IsDie, true);
+        }
+        
         public class Factory : PlaceholderFactory<Object, EntityView>
         {
         }

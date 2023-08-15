@@ -23,7 +23,7 @@ namespace TapTapTap.Core
                 || !Player.IsAlive
                 || tutorialsContainer.IsAnyTutorialActive
                 || GlobalTimer.ElapsedSeconds < GameplaySettings.DelayHealthRemovalFromLevelStart - GameplaySettings.HealthRemovalTimerS
-                || Player.StateMachine.CurrentState?.StateID == EntityStates.Attack) {
+                || Player.IsAttacking) {
                 timer.Start();
                 return;
             }

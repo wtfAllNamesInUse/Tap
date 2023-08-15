@@ -6,44 +6,50 @@ namespace TapTapTap.Core
     public class ScreenController
     {
         private IUiPrefabProvider screenProvider;
-        private Canvas rootCanvas;
 
         [Inject]
         public void Inject(
-            IUiPrefabProvider screenProvider,
-            Canvas rootCanvas)
+            IUiPrefabProvider screenProvider)
         {
             this.screenProvider = screenProvider;
-            this.rootCanvas = rootCanvas;
         }
 
-        public Screen ShowScreen<TObject>() where TObject : Screen
+        public Screen ShowScreen<TObject>(Transform parent = null) where TObject : Screen
         {
-            var screenPrefab = screenProvider.GetUiPrefab(typeof(TObject));
-            if (screenPrefab != null) {
-                var screen = Object.Instantiate(screenPrefab, rootCanvas.transform);
-                var screenComponent = screen.GetComponent<Screen>();
-                screenComponent.OnScreenInitialized();
-
-                return screenComponent;
+            if (GetScreen<TObject>(parent, out var screen)) {
+                return null;
             }
 
-            return null;
+            var screenComponent = screen.GetComponent<Screen>();
+            screenComponent.OnScreenInitialized();
+
+            return screenComponent;
         }
 
-        public Screen ShowScreen<TObject, TData>(TData data) where TObject : Screen
+        public Screen ShowScreen<TObject, TData>(TData data, Transform parent = null) where TObject : Screen
         {
-            var screenPrefab = screenProvider.GetUiPrefab(typeof(TObject));
-            if (screenPrefab != null) {
-                var screen = Object.Instantiate(screenPrefab, rootCanvas.transform);
-                var screenComponent = screen.GetComponent<ScreenWithData<TData>>();
-                screenComponent.SetData(data);
-                screenComponent.OnScreenInitialized();
-
-                return screenComponent;
+            if (GetScreen<TObject>(parent, out var screen)) {
+                return null;
             }
 
-            return null;
+            var screenComponent = screen.GetComponent<ScreenWithData<TData>>();
+            screenComponent.SetData(data);
+            screenComponent.OnScreenInitialized();
+
+            return screenComponent;
+        }
+
+        private bool GetScreen<TObject>(Transform parent, out GameObject screen) where TObject : Screen
+        {
+            screen = screenProvider.GetUiPrefab(typeof(TObject));
+            if (screen == null) {
+                return true;
+            }
+
+            if (parent != null) {
+                screen.transform.SetParent(parent);
+            }
+            return false;
         }
     }
 }

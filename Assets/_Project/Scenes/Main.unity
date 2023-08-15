@@ -158,6 +158,7 @@ MonoBehaviour:
   rootCanvas: {fileID: 552024181}
   camera: {fileID: 519420031}
   entity: {fileID: 5727523328210486730, guid: 5d23d6caa1fe8da41bed243818c7ecce, type: 3}
+  damagePopupPrefab: {fileID: 502969764525940220, guid: 0cc8031285ee64f94ba34a24dc20841e, type: 3}
 --- !u!114 &147103911
 MonoBehaviour:
   m_ObjectHideFlags: 0
