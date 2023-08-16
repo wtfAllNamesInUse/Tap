@@ -14,12 +14,16 @@ namespace TapTapTap.Core
 
         [SerializeField]
         private GameplaySettings gameplaySettings;
+        
+        [SerializeField]
+        private PerksConfig perksConfig;
 
         public override void InstallBindings()
         {
             Container.BindInstance(entityConfig).AsSingle();
             Container.BindInstance(screenPrefabs).AsSingle();
             Container.BindInstance(gameplaySettings).AsSingle();
+            Container.BindInstance(perksConfig).AsSingle();
         }
     }
 }

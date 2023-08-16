@@ -3,7 +3,7 @@ using Zenject;
 
 namespace TapTapTap.Core.FSM
 {
-    public class AttackState : EntityState
+    public class AttackState : State
     {
         public override int StateID => EntityStates.Attack;
 
@@ -11,55 +11,69 @@ namespace TapTapTap.Core.FSM
 
         private static readonly int Attacking = Animator.StringToHash("IsAttacking");
 
+        private EntityView entityView;
+        private Attributes attributes;
+        private EntityStateMachine stateMachine;
+        private EntityData entityData;
+
         [Inject]
-        public void Initialize(EntityGatherer entityGatherer)
+        public void Initialize(
+            EntityGatherer entityGatherer,
+            EntityView entityView,
+            Attributes attributes,
+            EntityStateMachine stateMachine,
+            EntityData entityData)
         {
             this.entityGatherer = entityGatherer;
+            this.entityView = entityView;
+            this.attributes = attributes;
+            this.stateMachine = stateMachine;
+            this.entityData = entityData;
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
 
-            Owner.Attributes.ApplyAttributeModifier(AttributeDefinition.Speed, -0.25f);
+            attributes.ApplyAttributeModifier(AttributeDefinition.Speed, -0.25f);
 
-            Owner.Animator.SetTrigger(Attacking);
-            Owner.AnimatorCallbacks.OnAnimationStateHasChanged += OnAnimationStateHasChanged;
+            entityView.Animator.SetTrigger(Attacking);
+            entityView.AnimatorCallbacks.OnAnimationStateHasChanged += OnAnimationStateHasChanged;
 
-            Owner.WeaponRoot.SetActive(true);
+            entityView.WeaponRoot.SetActive(true);
         }
 
         public override void OnExit()
         {
             base.OnExit();
 
-            Owner.AnimatorCallbacks.OnAnimationStateHasChanged -= OnAnimationStateHasChanged;
-            Owner.WeaponRoot.SetActive(false);
+            entityView.AnimatorCallbacks.OnAnimationStateHasChanged -= OnAnimationStateHasChanged;
+            entityView.WeaponRoot.SetActive(false);
         }
 
         private void OnAnimationStateHasChanged(AnimatorCallbacks.AnimationState animationState)
         {
-            if (animationState == AnimatorCallbacks.AnimationState.Finished) {
-                var myFraction = Owner.Data.EntityArchetype.Fraction;
-                var enemy = entityGatherer.GetClosestEntityMatchingPredicate(Owner.transform,
-                    p => p.Data.EntityArchetype.Fraction != myFraction, 1.5f);
+            switch (animationState) {
+                case AnimatorCallbacks.AnimationState.Finished: {
+                    var myFraction = entityData.EntityArchetype.Fraction;
+                    var enemy = entityGatherer.GetClosestEntityMatchingPredicate(Owner.transform,
+                        p => p.Data.EntityArchetype.Fraction != myFraction, 1.5f);
 
-                if (enemy != null) {
-                    Owner.StateMachine.EnqueueState(Owner.IsPlayer ? EntityStates.Idle : EntityStates.Attack);
+                    if (enemy != null) {
+                        stateMachine.EnqueueState(Owner.IsPlayer ? EntityStates.Idle : EntityStates.Attack);
+                    }
+
+                    stateMachine.FinishState(Owner.IsPlayer ? EntityStates.Run : EntityStates.Idle);
+                    break;
                 }
 
-                if (Owner.IsPlayer) {
-                    Owner.StateMachine.FinishState(EntityStates.Run);
-                }
-                else {
-                    Owner.StateMachine.FinishState(EntityStates.Idle);
-                }
-            }
-            else if (animationState == AnimatorCallbacks.AnimationState.Attack) {
-                if (Blackboard.TargetEntity != null) {
-                    Blackboard.TargetEntity.Attributes.ApplyAttributeModifier(AttributeDefinition.Health,
-                        -Owner.Attributes.GetAttributeValue(AttributeDefinition.Damage),
-                        AttributeModifierFlag.ClampedZeroMax);
+                case AnimatorCallbacks.AnimationState.Attack: {
+                    if (Blackboard.TargetEntity != null) {
+                        Blackboard.TargetEntity.Attributes.ApplyAttributeModifier(AttributeDefinition.Health,
+                            -attributes.GetAttributeValue(AttributeDefinition.Damage),
+                            AttributeModifierFlag.ClampedZeroMax);
+                    }
+                    break;
                 }
             }
         }

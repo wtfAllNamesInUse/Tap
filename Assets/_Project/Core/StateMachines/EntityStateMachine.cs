@@ -12,17 +12,25 @@ namespace TapTapTap.Core
 
     public class EntityStateMachine : StateMachine
     {
+        private EntityStatesFactory entityStatesFactory;
+        private Blackboard.Factory blackboardFactory;
+
         public EntityStateMachine(
             EntityStatesFactory entityStatesFactory,
-            Blackboard.Factory blackboardFactory,
-            IOwner owner)
+            Blackboard.Factory blackboardFactory)
         {
-            var states = entityStatesFactory.Create(owner);
-            var blackboard = blackboardFactory.Create();
-            DoInit(owner, states, blackboard);
+            this.entityStatesFactory = entityStatesFactory;
+            this.blackboardFactory = blackboardFactory;
         }
 
-        public class Factory : PlaceholderFactory<IOwner, EntityStateMachine>
+        public void Initialize()
+        {
+            var states = entityStatesFactory.Create();
+            var blackboard = blackboardFactory.Create();
+            DoInit(states, blackboard);
+        }
+
+        public class Factory : PlaceholderFactory<EntityStateMachine>
         {
         }
     }

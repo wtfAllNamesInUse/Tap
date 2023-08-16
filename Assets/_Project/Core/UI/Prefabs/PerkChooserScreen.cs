@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
@@ -6,23 +8,44 @@ namespace TapTapTap.Core
     public class PerkChooserScreen : ScreenWithData<LevelCompletedData>
     {
         private SavedData savedData;
+        private IPerkProvider perkProvider;
+
+        private const int PerksCount = 2;
+
+        private IList<PerkArchetype> perks;
+
+        [SerializeField]
+        private ConfigurableButton[] buttons;
 
         [Inject]
         public void Inject(
-            SavedData savedData)
+            SavedData savedData,
+            IPerkProvider perkProvider)
         {
             this.savedData = savedData;
+            this.perkProvider = perkProvider;
         }
 
-        public void OnHpPerkClicked()
+        public override void OnScreenInitialized()
         {
-            savedData.Health25PerksCount++;
-            RestartGame();
+            base.OnScreenInitialized();
+
+            InitializeButtons();
         }
 
-        public void OnDmgPerkClicked()
+        private void InitializeButtons()
         {
-            savedData.Damage10PerksCount++;
+            perks = perkProvider.GetPerks(PerksCount);
+
+            for (var i = 0; i < buttons.Length; i++) {
+                var button = buttons[i];
+                button.Initialize(perks[i].PerkName, OnPerkButtonClicked);
+            }
+        }
+
+        private void OnPerkButtonClicked(string perkName)
+        {
+            savedData.IncrementPerk(perkName);
             RestartGame();
         }
 

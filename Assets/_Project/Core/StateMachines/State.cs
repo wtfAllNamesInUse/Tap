@@ -1,13 +1,21 @@
+using Zenject;
+
 namespace TapTapTap.Core.FSM
 {
     public abstract class State
     {
         public abstract int StateID { get; }
 
-        protected internal IOwner Owner { get; set; }
-
         public StateMachine StateMachine { get; set; }
         public Blackboard Blackboard { get; set; }
+
+        protected Entity Owner;
+
+        [Inject]
+        protected void Initialize(Entity owner)
+        {
+            Owner = owner;
+        }
 
         public virtual void OnEnter()
         {
@@ -20,10 +28,5 @@ namespace TapTapTap.Core.FSM
         public virtual void OnExit()
         {
         }
-    }
-
-    public interface IOwner
-    {
-        Entity Owner { get; }
     }
 }

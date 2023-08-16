@@ -7,6 +7,7 @@ namespace TapTapTap.Core
     public class PerkArchetype : ScriptableObject
     {
         public string PerkName => perkName;
+        public IReadOnlyList<AttributeInfo> Attributes => attributes;
 
         [SerializeField]
         private string perkName;

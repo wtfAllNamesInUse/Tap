@@ -8,7 +8,6 @@ namespace TapTapTap.Core.FSM
     public class StateMachine : ITickable, IDisposable
     {
         private State currentState;
-        private IOwner owner;
         private int stateMask;
 
         private List<State> states;
@@ -28,15 +27,13 @@ namespace TapTapTap.Core.FSM
             this.tickableManager.Add(this);
         }
 
-        public void DoInit(IOwner owner, IEnumerable<State> states, Blackboard blackboard)
+        public void DoInit(IEnumerable<State> states, Blackboard blackboard)
         {
-            this.owner = owner;
             this.blackboard = blackboard;
 
             this.states = new List<State>(states);
             foreach (var state in this.states) {
                 state.StateMachine = this;
-                state.Owner = this.owner;
                 state.Blackboard = this.blackboard;
             }
 

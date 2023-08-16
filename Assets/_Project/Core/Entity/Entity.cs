@@ -6,12 +6,8 @@ using Zenject;
 namespace TapTapTap.Core
 {
     [SelectionBase]
-    public class Entity : MonoBehaviour, IOwner
+    public class Entity : MonoBehaviour
     {
-        public Entity Owner => this;
-        public Animator Animator => animator;
-        public AnimatorCallbacks AnimatorCallbacks => animatorCallbacks;
-        public GameObject WeaponRoot => weaponRoot;
         public Attributes Attributes => attributes;
         public Movement Movement => movement;
         public EntityStateMachine StateMachine => stateMachine;
@@ -20,14 +16,10 @@ namespace TapTapTap.Core
         public bool IsPlayer => Data.EntityArchetype.Fraction == EntityFraction.Player;
         public bool IsAlive => isAlive;
 
-        [SerializeField]
-        private Animator animator;
+        public bool IsAttacking => StateMachine.CurrentState?.StateID == EntityStates.Attack;
+        public bool IsRunning => StateMachine.CurrentState?.StateID == EntityStates.Run;
 
-        [SerializeField]
-        private AnimatorCallbacks animatorCallbacks;
-
-        [SerializeField]
-        private GameObject weaponRoot;
+        private EntityView entityView;
 
         [SerializeField]
         private Attributes attributes;
@@ -42,9 +34,6 @@ namespace TapTapTap.Core
 
         private bool isAlive = true;
 
-        private static readonly int IsHit = Animator.StringToHash("IsHit");
-        private static readonly int IsDie = Animator.StringToHash("IsDie");
-
         private const int DieMsDelay = 1500;
 
         [Inject]
@@ -52,33 +41,67 @@ namespace TapTapTap.Core
             EntityData data,
             EntityStateMachine.Factory stateMachineFactory,
             EntityGatherer entityGatherer,
-            HealthBar healthBar)
+            EntityView.Factory entityViewFactory,
+            HealthBar.Factory healthBarFactory)
         {
             this.data = data;
-            stateMachine = stateMachineFactory.Create(this);
-            attributes.DoInit(this.data.EntityArchetype.Attributes, OnAttributeHasChanged);
             this.entityGatherer = entityGatherer;
             this.entityGatherer.Register(this);
-            this.healthBar = healthBar;
-            movement?.Init(this);
 
-            Initialize();
+            // TODO: healthBar factory is needed because we need to bind inside this gameObject subContainer instead of sceneContext or projectContext
+            // TODO: is it possible to use screenController and bind to this gameObject subContainer?
+            healthBar = healthBarFactory.Create();
+
+            attributes.DoInit(this.data.EntityArchetype.Attributes, OnAttributeHasChanged);
+
+            entityView = entityViewFactory.Create(data.EntityArchetype.Prefab);
+            entityView.transform.SetParent(transform);
+
+            stateMachine = stateMachineFactory.Create();
+            stateMachine.Initialize();
         }
 
-        private void Initialize()
+        public void TryAttack()
         {
-            SetDirection(data.Direction);
+            var myFraction = data.EntityArchetype.Fraction;
+            var enemy = entityGatherer.GetClosestEntityMatchingPredicate(transform,
+                p => p.Data.EntityArchetype.Fraction != myFraction, 1.5f);
+            if (enemy != null) {
+                if (IsAttacking) {
+                    return;
+                }
+
+                Attack(enemy);
+                return;
+            }
+
+            if (!IsRunning) {
+                Run();
+            }
+        }
+
+        public void Attack(Entity enemy)
+        {
+            stateMachine.Blackboard.TargetEntity = enemy;
+            stateMachine.ChangeState(EntityStates.Attack);
+        }
+
+        public void Run()
+        {
+            stateMachine.ChangeState(EntityStates.Run);
         }
 
         private void OnAttributeHasChanged(AttributeDefinition attribute, float currentValue, float previousValue)
         {
-            if (attribute == AttributeDefinition.Health) {
-                if (currentValue <= 0.0f) {
-                    Die();
-                }
-                else {
-                    //Animator.SetTrigger(IsHit);
-                }
+            if (attribute != AttributeDefinition.Health) {
+                return;
+            }
+
+            if (currentValue <= 0.0f) {
+                Die();
+            }
+            else {
+                //Animator.SetTrigger(IsHit);
             }
         }
 
@@ -86,8 +109,7 @@ namespace TapTapTap.Core
         {
             isAlive = false;
 
-            Animator.SetTrigger(IsHit);
-            Animator.SetBool(IsDie, true);
+            entityView.PlayDieAnimation();
 
             entityGatherer.Unregister(this);
             StateMachine.Dispose();
@@ -96,15 +118,6 @@ namespace TapTapTap.Core
             await Task.Delay(DieMsDelay);
 
             Destroy(gameObject);
-        }
-
-        public void SetDirection(EntityDirection direction)
-        {
-            var currentDirection = transform.localScale;
-            currentDirection.x *= (direction == EntityDirection.Right) ? -1 : 1;
-            transform.localScale = currentDirection;
-
-            data.Direction = direction;
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -118,7 +131,7 @@ namespace TapTapTap.Core
             }
         }
 
-        public class Factory : PlaceholderFactory<Object, EntityData, Entity>
+        public class Factory : PlaceholderFactory<EntityData, Entity>
         {
         }
     }

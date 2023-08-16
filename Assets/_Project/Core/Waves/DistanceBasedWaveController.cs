@@ -42,7 +42,8 @@ namespace TapTapTap.Core
         private void OnGameStateChanged(GameStateChangedSignal signal)
         {
             var newGameState = signal.NewGameState;
-            if (newGameState == GameState.NewGame) {
+            if (newGameState == GameState.NewGame)
+            {
                 RunController();
             }
         }
@@ -60,7 +61,7 @@ namespace TapTapTap.Core
                 spawnedEnemyPosition.y = 0;
                 spawnedEnemyPosition.x += 6.0f;
 
-                spawnerSystem.SpawnEntity("ENEMY", EntityDirection.Left, positionProvider.EnemyStart,
+                spawnerSystem.SpawnEntity("ENEMY", positionProvider.EnemyStart,
                     spawnedEnemyPosition);
 
                 spawnedEnemiesCount++;

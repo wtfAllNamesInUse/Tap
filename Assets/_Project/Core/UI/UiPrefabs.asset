@@ -25,3 +25,5 @@ MonoBehaviour:
     gameObject: {fileID: 7063492696373076551, guid: 4462c4c92e4fa154d8eb04140451d1b7, type: 3}
   - name: PerkChooserScreen
     gameObject: {fileID: 7063492696373076551, guid: 6377c6acb37945545b18b6bd06e2349c, type: 3}
+  - name: DamagePopup
+    gameObject: {fileID: 7063492696373076551, guid: 0cc8031285ee64f94ba34a24dc20841e, type: 3}

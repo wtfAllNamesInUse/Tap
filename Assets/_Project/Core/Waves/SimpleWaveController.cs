@@ -51,7 +51,7 @@ namespace TapTapTap.Core
                 spawnedEnemyPosition.y = 0;
                 spawnedEnemyPosition.x += 5.0f;
 
-                spawnerSystem.SpawnEntity("ENEMY", EntityDirection.Left, positionProvider.EnemyStart,
+                spawnerSystem.SpawnEntity("ENEMY", positionProvider.EnemyStart,
                     spawnedEnemyPosition);
                 await Task.Delay(SpawnTimeMs);
 

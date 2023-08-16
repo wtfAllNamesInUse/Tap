@@ -1,26 +1,37 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace TapTapTap.Core
 {
-    public class HealthBar : MonoBehaviour, IDisposable
+    public class HealthBar : Screen, IDisposable
     {
         [SerializeField]
         private Slider slider;
 
-        private Entity entity;
+        private Transform entityTransform;
         private new Camera camera;
         private bool isVisible;
 
-        public void InitWithEntity(
-            Entity entity,
-            Camera camera)
-        {
-            this.entity = entity;
-            this.camera = camera;
+        private Attributes attributes;
 
-            entity.Attributes.OnAttributeHasChanged += OnAttributeHasChanged;
+        [Inject]
+        public void Inject(
+            Transform entityTransform,
+            Camera camera,
+            Attributes attributes)
+        {
+            this.entityTransform = entityTransform;
+            this.camera = camera;
+            this.attributes = attributes;
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            attributes.OnAttributeHasChanged += OnAttributeHasChanged;
             SetIsVisible(true);
             UpdatePosition();
         }
@@ -34,7 +45,7 @@ namespace TapTapTap.Core
         private void OnAttributeHasChanged(AttributeDefinition attribute, float currentValue, float previousValue)
         {
             if (attribute == AttributeDefinition.Health) {
-                var attributeInfo = entity.Attributes.GetAttribute(AttributeDefinition.Health);
+                var attributeInfo = attributes.GetAttribute(AttributeDefinition.Health);
                 slider.value = attributeInfo.CurrentValue / attributeInfo.MaxValue;
             }
         }
@@ -50,15 +61,19 @@ namespace TapTapTap.Core
 
         private void UpdatePosition()
         {
-            transform.position = camera.WorldToScreenPoint(entity.transform.position);
+            transform.position = camera.WorldToScreenPoint(entityTransform.position);
         }
 
         public void Dispose()
         {
             SetIsVisible(false);
 
-            entity.Attributes.OnAttributeHasChanged -= OnAttributeHasChanged;
+            attributes.OnAttributeHasChanged -= OnAttributeHasChanged;
             Destroy(gameObject);
+        }
+
+        public class Factory : PlaceholderFactory<HealthBar>
+        {
         }
     }
 }

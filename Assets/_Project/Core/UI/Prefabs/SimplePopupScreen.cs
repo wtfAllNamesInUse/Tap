@@ -16,11 +16,13 @@ namespace TapTapTap.Core
             text.text = CustomData.Text;
 
             var isAcceptButtonConfigured = !string.IsNullOrEmpty(CustomData.AcceptButtonText);
-            if (isAcceptButtonConfigured) {
-                acceptButton.gameObject.SetActive(true);
-                acceptButton.AddListener(CustomData.AcceptButtonClicked);
-                acceptButton.Text = CustomData.AcceptButtonText;
+            if (!isAcceptButtonConfigured) {
+                return;
             }
+            
+            acceptButton.gameObject.SetActive(true);
+            acceptButton.AddListener(CustomData.AcceptButtonClicked);
+            acceptButton.Text = CustomData.AcceptButtonText;
         }
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy
   m_EditorClassIdentifier: 
   entityName: ENEMY
-  prefab: {fileID: 2082831725570257987, guid: 5f34ae6fb1cf7034d88041f6fb71fe1b, type: 3}
+  prefab: {fileID: 7443262648937113875, guid: 3a8726e657073b94c912a881190b9e74, type: 3}
   fraction: 1
   attributes:
   - attribute: 1
