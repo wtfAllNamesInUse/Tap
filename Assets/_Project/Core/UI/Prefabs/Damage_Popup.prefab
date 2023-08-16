@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7063492696373076544}
   - component: {fileID: 502969764525940220}
+  - component: {fileID: 4939939790359922464}
   m_Layer: 5
   m_Name: Damage_Popup
   m_TagString: Untagged
@@ -51,6 +52,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 5157478790218346660}
+  transform: {fileID: 7063492696373076544}
+  canvasGroup: {fileID: 4939939790359922464}
+--- !u!225 &4939939790359922464
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7063492696373076551}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &7870852076268477353
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,6 +211,10 @@ PrefabInstance:
     - target: {fileID: 122375119873516974, guid: 8abe7aadf2728b3488d16ca4e6257979, type: 3}
       propertyPath: m_Color.a
       value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 122375119873516974, guid: 8abe7aadf2728b3488d16ca4e6257979, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 122375119873516975, guid: 8abe7aadf2728b3488d16ca4e6257979, type: 3}
       propertyPath: m_Pivot.x

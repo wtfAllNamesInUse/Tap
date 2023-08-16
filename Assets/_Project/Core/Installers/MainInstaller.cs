@@ -54,10 +54,11 @@ namespace TapTapTap.Core
             Container.Bind<IUiPrefabProvider>().To<UiPrefabProviderFromPool>().AsSingle();
             Container.Bind<IUiPrefabProvider>().To<UiPrefabProviderFromScriptableObject>().AsSingle();
 
-            Container.BindMemoryPool<DamagePopup, DamagePopup.Pool>()
-                .WithInitialSize(5)
-                .FromComponentInNewPrefab(damagePopupPrefab)
-                .UnderTransform(rootCanvas.transform);
+            Container.BindFactory<DamagePopup, DamagePopup.Factory>()
+                .FromMonoPoolableMemoryPool(x => x
+                    .WithInitialSize(5)
+                    .FromComponentInNewPrefab(damagePopupPrefab)
+                    .UnderTransform(rootCanvas.transform));
 
             InstallTutorials();
 

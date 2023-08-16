@@ -38,10 +38,10 @@ namespace TapTapTap.Core
                 return;
             }
 
-            // TODO: lets use doTween to animate
             screenController.ShowScreen<DamagePopup, DamagePopupData>(
                 new DamagePopupData {
-                    Damage = previousValue - currentValue
+                    Damage = previousValue - currentValue,
+                    WorldSpacePosition = entity.transform.position,
                 });
         }
     }

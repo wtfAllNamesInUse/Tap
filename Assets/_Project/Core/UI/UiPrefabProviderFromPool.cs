@@ -6,17 +6,17 @@ namespace TapTapTap.Core
 {
     public class UiPrefabProviderFromPool : IUiPrefabProvider
     {
-        private readonly DamagePopup.Pool damagePopupPool;
+        private readonly DamagePopup.Factory damagePopupPool;
 
         public UiPrefabProviderFromPool(
-            DamagePopup.Pool damagePopupPool)
+            DamagePopup.Factory damagePopupPool)
         {
             this.damagePopupPool = damagePopupPool;
         }
 
         public GameObject GetUiPrefab(Type type)
         {
-            return type == typeof(DamagePopup) ? damagePopupPool.Spawn()?.gameObject : null;
+            return type == typeof(DamagePopup) ? damagePopupPool.Create().gameObject : null;
         }
     }
 }
