@@ -5,6 +5,7 @@ namespace TapTapTap.Core
     [CreateAssetMenu(fileName = "GameplaySettings", menuName = "ScriptableObjects/GameplaySettings")]
     public class GameplaySettings : ScriptableObject
     {
+        public bool IsHealthRemovalEnabled => isHealthRemovalEnabled;
         public float LevelTimeS => levelTimeS;
         public float HealthRemovalTimerS => healthRemovalTimerS;
         public float ExecuteBelowSpeed => executeBelowSpeed;
@@ -22,6 +23,8 @@ namespace TapTapTap.Core
         private float levelTimeS;
 
         [Header("Health Removal")]
+        [SerializeField]
+        private bool isHealthRemovalEnabled;
         [SerializeField]
         private float healthRemovalTimerS;
         [SerializeField]

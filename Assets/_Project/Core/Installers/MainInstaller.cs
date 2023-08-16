@@ -22,6 +22,9 @@ namespace TapTapTap.Core
         private GameObject entity;
 
         [SerializeField]
+        private GameObject collectibleFacade;
+
+        [SerializeField]
         private DamagePopup damagePopupPrefab;
 
         public override void InstallBindings()
@@ -32,10 +35,14 @@ namespace TapTapTap.Core
             Container.BindInstance(cameraController).AsSingle();
 
             Container.Bind<SpawnerSystem>().AsSingle();
-            Container.Bind<ArchetypeProvider>().AsSingle();
+            Container.Bind<IArchetypeProvider<EntityArchetype>>().To<EntityArchetypeProvider>().AsSingle();
+            Container.Bind<IArchetypeProvider<CollectibleArchetype>>().To<CollectibleArchetypeProvider>().AsSingle();
 
             Container.BindFactory<EntityData, Entity, Entity.Factory>().FromSubContainerResolve()
                 .ByNewPrefabInstaller<EntityInstaller>(entity);
+
+            Container.BindFactory<CollectibleData, CollectibleFacade, CollectibleFacade.Factory>().FromSubContainerResolve()
+                .ByNewPrefabInstaller<CollectibleInstaller>(collectibleFacade);
 
             Container.BindInstance(positionProvider).AsSingle();
             Container.BindInterfacesTo<DistanceBasedWaveController>().AsSingle();
