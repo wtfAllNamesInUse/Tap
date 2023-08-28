@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fad34ff93882554f9e7dcdfb08398d8, type: 3}
   m_Name: CollectibleArchetype_Coins
   m_EditorClassIdentifier: 
-  collectibleName: 
-  prefab: {fileID: 0}
+  collectibleName: Coins
+  prefab: {fileID: 6930122694965717508, guid: ec2619471ed5f472cb1a465aae1ee2d8, type: 3}
   attributes:
-  - attribute: 1000
-    value: 100
+  - attribute: 0
+    value: 25

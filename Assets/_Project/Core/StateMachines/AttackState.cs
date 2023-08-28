@@ -14,7 +14,7 @@ namespace TapTapTap.Core.FSM
         private EntityView entityView;
         private Attributes attributes;
         private EntityStateMachine stateMachine;
-        private EntityData entityData;
+        private EntityArchetype archetype;
 
         [Inject]
         public void Initialize(
@@ -22,13 +22,13 @@ namespace TapTapTap.Core.FSM
             EntityView entityView,
             Attributes attributes,
             EntityStateMachine stateMachine,
-            EntityData entityData)
+            EntityArchetype entityData)
         {
             this.entityGatherer = entityGatherer;
             this.entityView = entityView;
             this.attributes = attributes;
             this.stateMachine = stateMachine;
-            this.entityData = entityData;
+            this.archetype = entityData;
         }
 
         public override void OnEnter()
@@ -55,9 +55,9 @@ namespace TapTapTap.Core.FSM
         {
             switch (animationState) {
                 case AnimatorCallbacks.AnimationState.Finished: {
-                    var myFraction = entityData.EntityArchetype.Fraction;
+                    var myFraction = archetype.Fraction;
                     var enemy = entityGatherer.GetClosestEntityMatchingPredicate(Owner.transform,
-                        p => p.Data.EntityArchetype.Fraction != myFraction, 1.5f);
+                        p => p.Archetype.Fraction != myFraction, 1.5f);
 
                     if (enemy != null) {
                         stateMachine.EnqueueState(Owner.IsPlayer ? EntityStates.Idle : EntityStates.Attack);

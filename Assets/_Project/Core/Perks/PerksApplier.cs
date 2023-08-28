@@ -45,7 +45,7 @@ namespace TapTapTap.Core
         {
             var playerAttributes = gameStateData.Player.Attributes;
             foreach (var attribute in perkArchetype.Attributes) {
-                playerAttributes.ApplyAttributeModifier(attribute.attribute, attribute.value * count);
+                playerAttributes.ApplyAttributeModifier(attribute.attribute, attribute.value * count, AttributeModifierFlag.ModifyMaxValue);
             }
         }
     }

@@ -6,7 +6,7 @@ namespace TapTapTap.Core
     public class CollectibleInstaller : Installer<CollectibleInstaller>
     {
         [InjectOptional]
-        private CollectibleData data;
+        private CollectibleArchetype data;
 
         public override void InstallBindings()
         {
@@ -16,6 +16,9 @@ namespace TapTapTap.Core
             
             Container.BindInstance(data);
             Container.Bind<Transform>().FromComponentOnRoot();
+            
+            Container.BindFactory<Object, CollectibleView, CollectibleView.Factory>()
+                .FromFactory<CollectibleViewFactory>();
         }
     }
 }

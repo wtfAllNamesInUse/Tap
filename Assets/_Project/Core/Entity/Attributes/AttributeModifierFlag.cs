@@ -7,5 +7,6 @@ namespace TapTapTap.Core
     {
         Percent = 0x1,
         ClampedZeroMax = 0x2,
+        ModifyMaxValue = 0x4,
     }
 }

@@ -10,6 +10,17 @@ namespace TapTapTap.Core
         public string CollectibleName => collectibleName;
         public Object Prefab => prefab;
 
+        public List<AttributeInfo> Attributes {
+            get {
+                var result = new List<AttributeInfo>(attributes.Count);
+                foreach (var attribute in attributes) {
+                    result.Add(attribute.DeepCopy());
+                }
+
+                return result;
+            }
+        }
+
         [SerializeField]
         private string collectibleName;
 
