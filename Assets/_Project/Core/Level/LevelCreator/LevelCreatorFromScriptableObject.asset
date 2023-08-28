@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelDescription:
     id: Test
-    positionScale: 1
+    positionScale: 3
     levelEntityDatas:
     - id: ENEMY
-    - id: ENEMY
+    - id: Coins
     - id: ENEMY
     - id: ENEMY
     - id: ENEMY
