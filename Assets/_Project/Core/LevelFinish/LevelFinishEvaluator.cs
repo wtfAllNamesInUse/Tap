@@ -24,7 +24,8 @@ namespace TapTapTap.Core
 
         public void Tick()
         {
-            if (!globalTimer.IsRunning || gameStateData.Player == null) {
+            var player = gameStateData.Player;
+            if (!globalTimer.IsRunning || player == null) {
                 return;
             }
 
@@ -34,8 +35,10 @@ namespace TapTapTap.Core
                         LevelCompletedResult = LevelCompletedResult.TimesUp
                     });
                 globalTimer.Stop();
+
+                player.Attributes.ApplyAttributeModifier(AttributeDefinition.Health, -float.MaxValue);
             }
-            else if (!gameStateData.Player.IsAlive) {
+            else if (!player.IsAlive) {
                 screenController.ShowScreen<LevelCompletedScreen, LevelCompletedData>(
                     new LevelCompletedData {
                         LevelCompletedResult = LevelCompletedResult.Defeated

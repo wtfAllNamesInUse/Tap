@@ -8,7 +8,7 @@ namespace TapTapTap.Core
     public class DistanceBasedWaveController : IInitializable, IDisposable, IWavesController
     {
         private readonly SignalBus signalBus;
-        private readonly SpawnerSystem spawnerSystem;
+        private readonly SpawnerContainer spawners;
         private readonly PositionProvider positionProvider;
         private readonly GameStateData gameStateData;
         private readonly DistanceEvaluator distanceEvaluator;
@@ -17,13 +17,13 @@ namespace TapTapTap.Core
 
         public DistanceBasedWaveController(
             SignalBus signalBus,
-            SpawnerSystem spawnerSystem,
+            SpawnerContainer spawners,
             PositionProvider positionProvider,
             GameStateData gameStateData,
             DistanceEvaluator distanceEvaluator)
         {
             this.signalBus = signalBus;
-            this.spawnerSystem = spawnerSystem;
+            this.spawners = spawners;
             this.positionProvider = positionProvider;
             this.gameStateData = gameStateData;
             this.distanceEvaluator = distanceEvaluator;
@@ -42,8 +42,7 @@ namespace TapTapTap.Core
         private void OnGameStateChanged(GameStateChangedSignal signal)
         {
             var newGameState = signal.NewGameState;
-            if (newGameState == GameState.NewGame)
-            {
+            if (newGameState == GameState.NewGame) {
                 RunController();
             }
         }
@@ -61,8 +60,11 @@ namespace TapTapTap.Core
                 spawnedEnemyPosition.y = 0;
                 spawnedEnemyPosition.x += 6.0f;
 
-                spawnerSystem.SpawnEntity("ENEMY", positionProvider.EnemyStart,
+                spawners.Spawn<Entity>("ENEMY", positionProvider.EnemyStart,
                     spawnedEnemyPosition);
+
+                spawners.Spawn<CollectibleFacade>("Coins", positionProvider.EnemyStart,
+                    new Vector3(spawnedEnemyPosition.x - 2.0f, spawnedEnemyPosition.y, spawnedEnemyPosition.z));
 
                 spawnedEnemiesCount++;
 

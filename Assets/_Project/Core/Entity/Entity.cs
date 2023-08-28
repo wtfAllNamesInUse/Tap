@@ -11,9 +11,9 @@ namespace TapTapTap.Core
         public Attributes Attributes => attributes;
         public Movement Movement => movement;
         public EntityStateMachine StateMachine => stateMachine;
-        public EntityData Data => data;
+        public EntityArchetype Archetype => archetype;
 
-        public bool IsPlayer => Data.EntityArchetype.Fraction == EntityFraction.Player;
+        public bool IsPlayer => Archetype.Fraction == EntityFraction.Player;
         public bool IsAlive => isAlive;
 
         public bool IsAttacking => StateMachine.CurrentState?.StateID == EntityStates.Attack;
@@ -27,10 +27,11 @@ namespace TapTapTap.Core
         [SerializeField]
         private Movement movement;
 
-        private EntityData data;
+        private EntityArchetype archetype;
         private EntityStateMachine stateMachine;
         private EntityGatherer entityGatherer;
         private HealthBar healthBar;
+        private IEncounterResolver encounterResolver;
 
         private bool isAlive = true;
 
@@ -38,46 +39,46 @@ namespace TapTapTap.Core
 
         [Inject]
         public void Inject(
-            EntityData data,
+            EntityArchetype archetype,
             EntityStateMachine.Factory stateMachineFactory,
             EntityGatherer entityGatherer,
             EntityView.Factory entityViewFactory,
-            HealthBar.Factory healthBarFactory)
+            HealthBar.Factory healthBarFactory,
+            IEncounterResolver encounterResolver)
         {
-            this.data = data;
+            this.archetype = archetype;
             this.entityGatherer = entityGatherer;
             this.entityGatherer.Register(this);
+            this.encounterResolver = encounterResolver;
 
             // TODO: healthBar factory is needed because we need to bind inside this gameObject subContainer instead of sceneContext or projectContext
             // TODO: is it possible to use screenController and bind to this gameObject subContainer?
             healthBar = healthBarFactory.Create();
 
-            attributes.DoInit(this.data.EntityArchetype.Attributes, OnAttributeHasChanged);
+            attributes.DoInit(Archetype.Attributes, OnAttributeHasChanged);
 
-            entityView = entityViewFactory.Create(data.EntityArchetype.Prefab);
+            entityView = entityViewFactory.Create(Archetype.Prefab);
             entityView.transform.SetParent(transform);
 
             stateMachine = stateMachineFactory.Create();
             stateMachine.Initialize();
         }
 
-        public void TryAttack()
+        public bool TryAttack()
         {
-            var myFraction = data.EntityArchetype.Fraction;
+            var myFraction = Archetype.Fraction;
             var enemy = entityGatherer.GetClosestEntityMatchingPredicate(transform,
-                p => p.Data.EntityArchetype.Fraction != myFraction, 1.5f);
+                p => p.Archetype.Fraction != myFraction, 1.5f);
             if (enemy != null) {
                 if (IsAttacking) {
-                    return;
+                    return true;
                 }
 
                 Attack(enemy);
-                return;
+                return true;
             }
 
-            if (!IsRunning) {
-                Run();
-            }
+            return false;
         }
 
         public void Attack(Entity enemy)
@@ -120,18 +121,37 @@ namespace TapTapTap.Core
             Destroy(gameObject);
         }
 
+        public void Interact(IInteractable interactingWith)
+        {
+            if (!IsPlayer) {
+                return;
+            }
+
+            StateMachine.ChangeState(EntityStates.Idle);
+            encounterResolver.PushEncounter(interactingWith);
+        }
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (IsPlayer) {
-                StateMachine.ChangeState(EntityStates.Idle);
+            var collidedWithInteractable = collision.gameObject.GetComponent<IInteractable>();
+            if (collidedWithInteractable != null) {
+                Interact(collidedWithInteractable);
+                return;
             }
-            else {
-                StateMachine.Blackboard.TargetEntity = collision.gameObject.GetComponent<Entity>();
-                StateMachine.ChangeState(EntityStates.Attack);
+
+            var collidedWithEntity = collision.gameObject.GetComponent<Entity>();
+            if (collidedWithEntity != null) {
+                if (IsPlayer) {
+                    StateMachine.ChangeState(EntityStates.Idle);
+                }
+                else {
+                    StateMachine.Blackboard.TargetEntity = collidedWithEntity;
+                    StateMachine.ChangeState(EntityStates.Attack);
+                }
             }
         }
 
-        public class Factory : PlaceholderFactory<EntityData, Entity>
+        public class Factory : PlaceholderFactory<EntityArchetype, Entity>
         {
         }
     }

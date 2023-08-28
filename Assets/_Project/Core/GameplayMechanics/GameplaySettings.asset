@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a433713c05b614194398b13846e4b6, type: 3}
   m_Name: GameplaySettings
   m_EditorClassIdentifier: 
-  levelTimeS: 30
+  levelTimeS: 9999
+  isHealthRemovalEnabled: 0
   healthRemovalTimerS: 1.5
   executeBelowSpeed: 1
   executeAboveSpeed: 2.25

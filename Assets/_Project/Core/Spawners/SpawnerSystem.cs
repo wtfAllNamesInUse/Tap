@@ -5,11 +5,11 @@ namespace TapTapTap.Core
     public class SpawnerSystem
     {
         private readonly Entity.Factory entityFactory;
-        private readonly ArchetypeProvider archetypeProvider;
+        private readonly IArchetypeProvider<EntityArchetype> archetypeProvider;
 
         public SpawnerSystem(
             Entity.Factory entityFactory,
-            ArchetypeProvider archetypeProvider)
+            IArchetypeProvider<EntityArchetype> archetypeProvider)
         {
             this.entityFactory = entityFactory;
             this.archetypeProvider = archetypeProvider;

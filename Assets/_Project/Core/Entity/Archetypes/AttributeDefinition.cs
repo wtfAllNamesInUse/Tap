@@ -5,5 +5,7 @@ namespace TapTapTap.Core
         Health,
         Damage,
         Speed,
+
+        Coin = 1000,
     }
 }

@@ -19,6 +19,10 @@ namespace TapTapTap.Core
 
         public override void Tick()
         {
+            if (!GameplaySettings.IsHealthRemovalEnabled) {
+                return;
+            }
+
             if (Player == null 
                 || !Player.IsAlive
                 || tutorialsContainer.IsAnyTutorialActive

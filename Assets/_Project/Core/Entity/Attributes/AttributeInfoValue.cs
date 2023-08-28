@@ -20,6 +20,10 @@ namespace TapTapTap.Core
             var newValueAdd = Helpers.Round_3DP(flags.HasFlag(AttributeModifierFlag.Percent) ? value * MaxValue : value);
             CurrentValue += newValueAdd;
 
+            if (flags.HasFlag(AttributeModifierFlag.ModifyMaxValue)) {
+                MaxValue = CurrentValue;
+            }
+            
             if (flags.HasFlag(AttributeModifierFlag.ClampedZeroMax)) {
                 CurrentValue = Mathf.Clamp(CurrentValue, 0.0f, MaxValue);
             }

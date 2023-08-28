@@ -1,3 +1,4 @@
+using System;
 using TapTapTap.Core.FSM;
 using UnityEngine;
 using Zenject;
@@ -22,6 +23,9 @@ namespace TapTapTap.Core
         private GameObject entity;
 
         [SerializeField]
+        private GameObject collectibleFacade;
+
+        [SerializeField]
         private DamagePopup damagePopupPrefab;
 
         public override void InstallBindings()
@@ -31,18 +35,34 @@ namespace TapTapTap.Core
             Container.Bind<GameStateData>().AsSingle();
             Container.BindInstance(cameraController).AsSingle();
 
-            Container.Bind<SpawnerSystem>().AsSingle();
-            Container.Bind<ArchetypeProvider>().AsSingle();
+            Container.Bind<ISpawner>().To<SpawnerContainer>().AsSingle()
+                .WhenInjectedInto(typeof(GameInitializer), typeof(GameController));
+            Container.Bind<ISpawner>()
+                .To<Spawner<Entity, Entity.Factory, IArchetypeProvider<EntityArchetype>, EntityArchetype>>()
+                .AsSingle();
+            Container.Bind<ISpawner>()
+                .To<Spawner<CollectibleFacade, CollectibleFacade.Factory, IArchetypeProvider<CollectibleArchetype>,
+                    CollectibleArchetype>>()
+                .AsSingle();
 
-            Container.BindFactory<EntityData, Entity, Entity.Factory>().FromSubContainerResolve()
+            Container.Bind<IArchetypeProvider<EntityArchetype>>().To<EntityArchetypeProvider>().AsSingle();
+            Container.Bind<IArchetypeProvider<CollectibleArchetype>>().To<CollectibleArchetypeProvider>().AsSingle();
+
+            Container.BindFactory<EntityArchetype, Entity, Entity.Factory>()
+                .FromSubContainerResolve()
                 .ByNewPrefabInstaller<EntityInstaller>(entity);
 
+            Container.BindFactory<CollectibleArchetype, CollectibleFacade, CollectibleFacade.Factory>()
+                .FromSubContainerResolve()
+                .ByNewPrefabInstaller<CollectibleInstaller>(collectibleFacade);
+
             Container.BindInstance(positionProvider).AsSingle();
-            Container.BindInterfacesTo<DistanceBasedWaveController>().AsSingle();
+            // Container.BindInterfacesTo<DistanceBasedWaveController>().AsSingle();
 
             Container.BindInterfacesTo<GameController>().AsSingle();
 
-            Container.BindInterfacesAndSelfTo<ClickDetector>().AsSingle();
+            InputHandlerInstaller.Install(Container);
+
             Container.Bind<EntityGatherer>().AsSingle();
 
             Container.BindInstance(rootCanvas).AsSingle();
@@ -76,6 +96,13 @@ namespace TapTapTap.Core
 
             Container.BindInterfacesTo<PerksApplier>().AsSingle();
             Container.Bind<IPerkProvider>().To<RandomPerkProvider>().AsSingle();
+
+            LevelManagementInstaller.Install(Container);
+
+            Container.Bind(typeof(IInitializable)).To<GameInitializer>().AsSingle().NonLazy();
+            Container.Bind<IEncounterResolver>().To<EncounterResolver>().AsSingle();
+
+            Container.Bind(typeof(IInputResolver)).To<InputResolver>().AsSingle();
         }
 
         private void InstallGameplayMechanics()
@@ -95,11 +122,7 @@ namespace TapTapTap.Core
 
         private void InstallBlockers()
         {
-            Container.Bind<IBlocker>().To<PlayerInputBlocker>().AsSingle().WhenInjectedInto(
-                typeof(GameController),
-                typeof(FirstLaunchTutorial),
-                typeof(GameplayTutorialsContainer),
-                typeof(SpeedSystem));
+            Container.Bind<IBlocker>().To<PlayerInputBlocker>().AsSingle();
         }
 
         private void InstallTutorials()

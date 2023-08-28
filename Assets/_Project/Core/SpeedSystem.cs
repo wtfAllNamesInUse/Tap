@@ -41,10 +41,11 @@ namespace TapTapTap.Core
                 return;
             }
 
-            var speed = Player.Attributes.GetAttribute(AttributeDefinition.Speed);
+            var playerAttributes = Player.Attributes;
+            var speed = playerAttributes.GetAttribute(AttributeDefinition.Speed);
             var speedIncrease = gameplaySettings.SpeedIncreaseOnTap;
             if (speed.CurrentValue + speedIncrease < gameplaySettings.MaxSpeed) {
-                Player.Attributes.ApplyAttributeModifier(AttributeDefinition.Speed, speedIncrease);
+                playerAttributes.ApplyAttributeModifier(AttributeDefinition.Speed, speedIncrease);
             }
         }
     }

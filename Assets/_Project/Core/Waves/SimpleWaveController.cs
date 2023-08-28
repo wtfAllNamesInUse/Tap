@@ -10,18 +10,18 @@ namespace TapTapTap.Core
         private const int SpawnTimeMs = 5000;
 
         private readonly SignalBus signalBus;
-        private readonly SpawnerSystem spawnerSystem;
+        private readonly ISpawner entitySpawner;
         private readonly PositionProvider positionProvider;
         private readonly GameStateData gameStateData;
 
         public SimpleWaveController(
             SignalBus signalBus,
-            SpawnerSystem spawnerSystem,
+            ISpawner entitySpawner,
             PositionProvider positionProvider,
             GameStateData gameStateData)
         {
             this.signalBus = signalBus;
-            this.spawnerSystem = spawnerSystem;
+            this.entitySpawner = entitySpawner;
             this.positionProvider = positionProvider;
             this.gameStateData = gameStateData;
         }
@@ -51,7 +51,7 @@ namespace TapTapTap.Core
                 spawnedEnemyPosition.y = 0;
                 spawnedEnemyPosition.x += 5.0f;
 
-                spawnerSystem.SpawnEntity("ENEMY", positionProvider.EnemyStart,
+                entitySpawner.Spawn<Entity>("ENEMY", positionProvider.EnemyStart,
                     spawnedEnemyPosition);
                 await Task.Delay(SpawnTimeMs);
 
