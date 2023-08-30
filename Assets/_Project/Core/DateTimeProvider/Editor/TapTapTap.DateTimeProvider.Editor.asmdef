@@ -1,0 +1,19 @@
+{
+    "name": "TapTapTap.DateTimeProvider.Editor",
+    "rootNamespace": "TapTapTap.DateTimeProvider.Editor",
+    "references": [
+        "GUID:d0acddb179989574c8355991596bd3e6",
+        "GUID:738be17cbd4d94d08af7ef9a0778cb8a"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

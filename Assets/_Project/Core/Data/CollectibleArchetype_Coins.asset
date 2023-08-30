@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: CollectibleArchetype_Coins
   m_EditorClassIdentifier: 
   collectibleName: Coins
-  prefab: {fileID: 6930122694965717508, guid: ec2619471ed5f472cb1a465aae1ee2d8, type: 3}
-  attributes:
-  - attribute: 0
-    value: 25
+  prefab: {fileID: 3151412129623190758, guid: dc489d1933c344ef795f5f63053c5577, type: 3}
+  isResolvingRequired: 0
+  attributes: []
+  items:
+  - itemName: Coins
+    count: 25

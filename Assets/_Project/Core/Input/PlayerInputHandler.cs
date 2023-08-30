@@ -25,8 +25,7 @@ namespace TapTapTap.Core
             }
 
             if (EncounterResolver.IsResolving) {
-                EncounterResolver.RegisterInput(inputEvent);
-                EncounterResolver.TryResolve();
+                EncounterResolver.ProcessInput(inputEvent);
                 return;
             }
 

@@ -32,21 +32,31 @@ namespace TapTapTap.Core
             interactionScreen = screenController.ShowScreen<InteractionScreen>();
         }
 
-        public bool TryResolve()
+        public void ProcessInput(InputEventBase inputEvent)
+        {
+            if (!IsResolving) {
+                return;
+            }
+
+            RegisterInput(inputEvent);
+            TryResolve();
+        }
+
+        private void TryResolve()
         {
             foreach (var encounterData in activeEncounters) {
                 var state = TryInternalResolve(encounterData);
-                if (state != InteractionResolveState.Unresolved) {
-                    ResolveInteraction(encounterData.Encounter, state);
-                    activeEncounters.Remove(encounterData);
-                    return true;
+                if (state == InteractionResolveState.Unresolved) {
+                    continue;
                 }
+                
+                ResolveInteraction(encounterData.Encounter, state);
+                activeEncounters.Remove(encounterData);
+                return;
             }
-
-            return false;
         }
 
-        public void ResolveInteraction(IInteractable interactingWith, InteractionResolveState interactionResolveState)
+        private void ResolveInteraction(IInteractable interactingWith, InteractionResolveState interactionResolveState)
         {
             if (interactionResolveState != InteractionResolveState.Skip) {
                 interactingWith.ExecuteInteraction(gameStateData.Player, interactionResolveState);
@@ -55,7 +65,7 @@ namespace TapTapTap.Core
             interactionScreen.Close();
         }
 
-        public void RegisterInput(InputEventBase inputEvent)
+        private void RegisterInput(InputEventBase inputEvent)
         {
             activeEncounters[0].InputEvents.Add(inputEvent);
         }

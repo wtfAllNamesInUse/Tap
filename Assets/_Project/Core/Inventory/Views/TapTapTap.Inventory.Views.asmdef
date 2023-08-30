@@ -1,0 +1,17 @@
+{
+    "name": "TapTapTap.Inventory.Views",
+    "rootNamespace": "TapTapTap.Inventory.Views",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:350ae1c8f425848ab8c8bf55cdd1cb0e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

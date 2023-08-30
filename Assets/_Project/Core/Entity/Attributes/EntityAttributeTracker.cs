@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Zenject;
 
 namespace TapTapTap.Core
@@ -32,15 +33,16 @@ namespace TapTapTap.Core
             if (attribute != AttributeDefinition.Health) {
                 return;
             }
-            
+
             var value = previousValue - currentValue;
-            if (value <= 0) {
+            if (value == 0) {
                 return;
             }
 
             screenController.ShowScreen<DamagePopup, DamagePopupData>(
                 new DamagePopupData {
-                    Damage = previousValue - currentValue,
+                    Sign = value <= 0,
+                    Value = Mathf.Abs(value),
                     WorldSpacePosition = entity.transform.position,
                 });
         }
