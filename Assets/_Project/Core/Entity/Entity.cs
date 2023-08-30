@@ -127,8 +127,13 @@ namespace TapTapTap.Core
                 return;
             }
 
-            StateMachine.ChangeState(EntityStates.Idle);
-            encounterResolver.PushEncounter(interactingWith);
+            if (interactingWith.IsResolvingRequired) {
+                StateMachine.ChangeState(EntityStates.Idle);
+                encounterResolver.PushEncounter(interactingWith);
+            }
+            else {
+                interactingWith.ExecuteInteraction(this, InteractionResolveState.Unresolved);
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

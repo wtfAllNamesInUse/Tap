@@ -1,5 +1,6 @@
-using System;
+using TapTapTap.ConfigurableTickables;
 using TapTapTap.Core.FSM;
+using TapTapTap.DateTimeProvider;
 using UnityEngine;
 using Zenject;
 
@@ -103,6 +104,10 @@ namespace TapTapTap.Core
             Container.Bind<IEncounterResolver>().To<EncounterResolver>().AsSingle();
 
             Container.Bind(typeof(IInputResolver)).To<InputResolver>().AsSingle();
+            
+            InventoryInstaller.Install(Container);
+            ConfigurableTickablesInstaller.Install(Container);
+            DateTimeProviderInstaller.Install(Container);
         }
 
         private void InstallGameplayMechanics()

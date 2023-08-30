@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -16,6 +17,10 @@ namespace TapTapTap.Core
         }
 
         public virtual void OnScreenInitialized()
+        {
+        }
+
+        public virtual void OnDestroy()
         {
         }
     }

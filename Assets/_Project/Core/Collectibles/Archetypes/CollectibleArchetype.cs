@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TapTapTap.Inventory;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -9,6 +10,7 @@ namespace TapTapTap.Core
     {
         public string CollectibleName => collectibleName;
         public Object Prefab => prefab;
+        public bool IsResolvingRequired => isResolvingRequired;
 
         public List<AttributeInfo> Attributes {
             get {
@@ -21,6 +23,8 @@ namespace TapTapTap.Core
             }
         }
 
+        public List<InventoryItemModel> Items => items;
+
         [SerializeField]
         private string collectibleName;
 
@@ -28,6 +32,12 @@ namespace TapTapTap.Core
         private Object prefab;
 
         [SerializeField]
+        private bool isResolvingRequired;
+        
+        [SerializeField]
         private List<AttributeInfo> attributes = new();
+        
+        [SerializeField]
+        private List<InventoryItemModel> items = new();
     }
 }

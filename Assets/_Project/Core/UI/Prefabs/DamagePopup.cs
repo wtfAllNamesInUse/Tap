@@ -30,7 +30,8 @@ namespace TapTapTap.Core
 
         public override async void OnScreenInitialized()
         {
-            text.text = CustomData.Damage.ToString(CultureInfo.InvariantCulture);
+            var sign = CustomData.Sign ? "+" : "-";
+            text.text = $"{sign}{CustomData.Value.ToString(CultureInfo.InvariantCulture)}";
             transform.position = camera.WorldToScreenPoint(CustomData.WorldSpacePosition);
 
             await RunAnimation();
@@ -61,7 +62,7 @@ namespace TapTapTap.Core
 
             var firstMoveBy = Vector3.up * 350.0f;
             var secondMoveBy = Vector3.up * 1350.0f;
-            
+
             var sequence = DOTween.Sequence()
                 .Append(transform.DOBlendableLocalMoveBy(firstMoveBy, duration))
                 .AppendInterval(delay)

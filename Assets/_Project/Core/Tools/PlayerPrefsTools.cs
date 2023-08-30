@@ -10,5 +10,11 @@ namespace TapTapTap.Core
         {
             PlayerPrefs.DeleteAll();
         }
+        
+        [MenuItem("Tools/Delete EP")]
+        public static void DeleteAllEditor()
+        {
+            EditorPrefs.DeleteAll();
+        }
     }
 }

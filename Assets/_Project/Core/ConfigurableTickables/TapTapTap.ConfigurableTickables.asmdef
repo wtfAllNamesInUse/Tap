@@ -1,0 +1,17 @@
+{
+    "name": "TapTapTap.ConfigurableTickables",
+    "rootNamespace": "TapTapTap.ConfigurableTickables",
+    "references": [
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:738be17cbd4d94d08af7ef9a0778cb8a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
