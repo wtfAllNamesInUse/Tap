@@ -2,30 +2,32 @@ using Zenject;
 
 namespace TapTapTap.Core
 {
-    public class TimerBasedMechanic : IGameplayMechanic, ITickable
+    public abstract class TimerBasedMechanic<TGameplayMechanicModel>
+        : IGameplayMechanic<TGameplayMechanicModel>, ITickable
+        where TGameplayMechanicModel : BaseGameplayMechanicModel
     {
+        public abstract string Id { get; }
+        public TGameplayMechanicModel Model { get; }
+
         protected readonly ITimer GlobalTimer;
         protected readonly GameStateData GameStateData;
-        protected readonly GameplaySettings GameplaySettings;
+        protected readonly GameplayMechanicModelsContainer ModelsContainer;
 
         protected Entity Player => GameStateData.Player;
 
         protected TimerBasedMechanic(
             ITimersContainer gameplayTimers,
             GameStateData gameStateData,
-            GameplaySettings gameplaySettings)
+            GameplayMechanicModelsContainer modelsContainer)
         {
             GlobalTimer = gameplayTimers.GetTimer(GameplayTimersContainer.GlobalTimer);
             GameStateData = gameStateData;
-            GameplaySettings = gameplaySettings;
+            ModelsContainer = modelsContainer;
+
+            Model = ModelsContainer.GetModel(Id) as TGameplayMechanicModel;
         }
 
-        public virtual void Tick()
-        {
-        }
-
-        public virtual void Execute()
-        {
-        }
+        public abstract void Tick();
+        public abstract void Execute();
     }
 }

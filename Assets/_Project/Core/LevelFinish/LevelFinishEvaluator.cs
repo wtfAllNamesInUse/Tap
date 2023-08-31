@@ -1,3 +1,4 @@
+using TapTapTap.Ui;
 using Zenject;
 
 namespace TapTapTap.Core

@@ -1,4 +1,5 @@
 using System;
+using TapTapTap.DateTimeProvider;
 using Zenject;
 
 namespace TapTapTap.Core
@@ -14,15 +15,19 @@ namespace TapTapTap.Core
         private bool isRunning;
         
         private readonly string id;
+        private readonly IDateTimeProvider dateTimeProvider;
 
-        public Timer(string id)
+        public Timer(
+            string id,
+            IDateTimeProvider dateTimeProvider)
         {
             this.id = id;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public void Start()
         {
-            dateTimeStart = DateTime.Now;
+            dateTimeStart = dateTimeProvider.CurrentDateTime;
             isRunning = true;
         }
 

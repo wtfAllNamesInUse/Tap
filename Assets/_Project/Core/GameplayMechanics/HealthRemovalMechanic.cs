@@ -1,32 +1,35 @@
 namespace TapTapTap.Core
 {
-    public class HealthRemovalMechanic : TimerBasedMechanic
+    public class HealthRemovalMechanic : TimerBasedMechanic<HealthRemovalMechanicModel>
     {
+        public override string Id => "health_removal";
+
         private readonly ITimer timer;
         private readonly ITutorialsContainer tutorialsContainer;
 
         public HealthRemovalMechanic(
             ITimersContainer timersContainer,
             GameStateData gameStateData,
-            GameplaySettings gameplaySettings,
-            ITutorialsContainer tutorialsContainer)
-            : base(timersContainer, gameStateData, gameplaySettings)
+            ITutorialsContainer tutorialsContainer,
+            GameplayMechanicModelsContainer modelsContainer)
+            : base(timersContainer, gameStateData, modelsContainer)
         {
             this.tutorialsContainer = tutorialsContainer;
-            
+
             timer = timersContainer.GetTimer(GameplayTimersContainer.HealthRemovalTimer);
         }
 
         public override void Tick()
         {
-            if (!GameplaySettings.IsHealthRemovalEnabled) {
+            if (!Model.isEnabled) {
                 return;
             }
 
-            if (Player == null 
+            if (Player == null
                 || !Player.IsAlive
                 || tutorialsContainer.IsAnyTutorialActive
-                || GlobalTimer.ElapsedSeconds < GameplaySettings.DelayHealthRemovalFromLevelStart - GameplaySettings.HealthRemovalTimerS
+                || GlobalTimer.ElapsedSeconds <
+                Model.Config.DelayHealthRemovalFromLevelStart - Model.Config.HealthRemovalTimerS
                 || Player.IsAttacking) {
                 timer.Start();
                 return;
@@ -38,13 +41,13 @@ namespace TapTapTap.Core
         public override void Execute()
         {
             var elapsedS = timer.ElapsedSeconds;
-            if (elapsedS >= GameplaySettings.HealthRemovalTimerS) {
+            if (elapsedS >= Model.Config.HealthRemovalTimerS) {
                 timer.Start();
 
                 var speed = Player.Attributes.GetAttributeValue(AttributeDefinition.Speed);
-                if (speed < GameplaySettings.ExecuteBelowSpeed || speed > GameplaySettings.ExecuteAboveSpeed) {
+                if (speed < Model.Config.ExecuteBelowSpeed || speed > Model.Config.ExecuteAboveSpeed) {
                     Player.Attributes.ApplyAttributeModifier(AttributeDefinition.Health,
-                        GameplaySettings.HealthToRemove);
+                        Model.Config.HealthToRemove);
                 }
             }
         }
