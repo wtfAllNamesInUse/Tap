@@ -1,3 +1,4 @@
+using TapTapTap.Ui;
 using UnityEngine;
 using Zenject;
 
@@ -18,6 +19,8 @@ namespace TapTapTap.Core
         private PerksConfig perksConfig;
         [SerializeField]
         private BuiltInLevelsContainer builtInLevelsContainer;
+        [SerializeField]
+        private GameplayMechanicModelsContainer gameplayMechanicModelsContainer;
 
         public override void InstallBindings()
         {
@@ -27,6 +30,7 @@ namespace TapTapTap.Core
             Container.BindInstance(gameplaySettings).AsSingle();
             Container.BindInstance(perksConfig).AsSingle();
             Container.BindInstance(builtInLevelsContainer).AsSingle();
+            Container.BindInstance(gameplayMechanicModelsContainer).AsSingle();
         }
     }
 }

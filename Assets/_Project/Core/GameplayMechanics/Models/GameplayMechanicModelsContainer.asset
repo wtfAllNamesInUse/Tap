@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842a7d386b6604ab99ff684860ea9ca5, type: 3}
+  m_Name: GameplayMechanicModelsContainer
+  m_EditorClassIdentifier: 
+  models:
+  - {fileID: 11400000, guid: ea9cbd89297054319a7bd0af7f1fd572, type: 2}
+  - {fileID: 11400000, guid: e609a496418f3470394401e99ee13fd7, type: 2}
+  - {fileID: 11400000, guid: 187078e7f18f4408885b9b93862d7f7a, type: 2}

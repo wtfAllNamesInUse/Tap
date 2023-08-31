@@ -18,3 +18,4 @@ MonoBehaviour:
   gameplaySettings: {fileID: 11400000, guid: 1dca1bbc0416f1e4fa43a1e086f937e0, type: 2}
   perksConfig: {fileID: 11400000, guid: 40671030b965493499f7ff1d1cb5d910, type: 2}
   builtInLevelsContainer: {fileID: 11400000, guid: 603af0dc5fe054816a5d6c10b20ad969, type: 2}
+  gameplayMechanicModelsContainer: {fileID: 11400000, guid: 9ce7a538faf5e4aab810c679fe1e19c9, type: 2}

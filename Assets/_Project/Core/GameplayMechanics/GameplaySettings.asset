@@ -13,13 +13,6 @@ MonoBehaviour:
   m_Name: GameplaySettings
   m_EditorClassIdentifier: 
   levelTimeS: 30
-  isHealthRemovalEnabled: 1
-  healthRemovalTimerS: 1.5
-  executeBelowSpeed: 1
-  executeAboveSpeed: 2.25
-  healthToRemove: -25
-  delayHealthRemovalFromLevelStart: 7.5
+  isSpeedIncreaseOnTapEnabled: 1
   speedIncreaseOnTap: 0.2
   maxSpeed: 3
-  speedRemovalTimerS: 0.5
-  speedRemovalValue: -0.15

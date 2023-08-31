@@ -1,6 +1,8 @@
+using TapTapTap.Blockers;
 using TapTapTap.ConfigurableTickables;
 using TapTapTap.Core.FSM;
 using TapTapTap.DateTimeProvider;
+using TapTapTap.Ui;
 using UnityEngine;
 using Zenject;
 
@@ -68,7 +70,8 @@ namespace TapTapTap.Core
 
             Container.BindInstance(rootCanvas).AsSingle();
             Container.BindInstance(camera).AsSingle();
-            Container.Bind<ScreenController>().AsSingle();
+            
+            UiInstaller.Install(Container);
 
             Container.Bind<IUiPrefabProvider>().To<UiPrefabProviderFromProviders>().AsSingle()
                 .WhenInjectedInto(typeof(ScreenController), typeof(HealthBarFactory));
@@ -87,10 +90,7 @@ namespace TapTapTap.Core
 
             InstallBlockers();
 
-            Container.Bind(typeof(IInitializable), typeof(System.IDisposable)).To<SpeedSystem>().AsSingle().NonLazy();
-
             InstallTimers();
-            InstallGameplayMechanics();
 
             Container.BindInterfacesAndSelfTo<DistanceEvaluator>().AsSingle();
             Container.BindInterfacesTo<LevelFinishEvaluator>().AsSingle();
@@ -108,14 +108,6 @@ namespace TapTapTap.Core
             InventoryInstaller.Install(Container);
             ConfigurableTickablesInstaller.Install(Container);
             DateTimeProviderInstaller.Install(Container);
-        }
-
-        private void InstallGameplayMechanics()
-        {
-            // TODO: atm we have to create mechanic as startup because we use ITickable
-            // TODO: lets convert it to use LazyInject and create them only when necessary/ enabled
-            Container.Bind(typeof(IGameplayMechanic), typeof(ITickable)).To<HealthRemovalMechanic>().AsSingle();
-            Container.Bind(typeof(IGameplayMechanic), typeof(ITickable)).To<SpeedRemovalMechanic>().AsSingle();
         }
 
         private void InstallTimers()
