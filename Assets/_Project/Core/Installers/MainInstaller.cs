@@ -1,7 +1,10 @@
+using System;
+using TapTapTap.Archetypes;
 using TapTapTap.Blockers;
 using TapTapTap.ConfigurableTickables;
 using TapTapTap.Core.FSM;
 using TapTapTap.DateTimeProvider;
+using TapTapTap.Inventory;
 using TapTapTap.Ui;
 using UnityEngine;
 using Zenject;
@@ -70,7 +73,7 @@ namespace TapTapTap.Core
 
             Container.BindInstance(rootCanvas).AsSingle();
             Container.BindInstance(camera).AsSingle();
-            
+
             UiInstaller.Install(Container);
 
             Container.Bind<IUiPrefabProvider>().To<UiPrefabProviderFromProviders>().AsSingle()
@@ -94,6 +97,7 @@ namespace TapTapTap.Core
 
             Container.BindInterfacesAndSelfTo<DistanceEvaluator>().AsSingle();
             Container.BindInterfacesTo<LevelFinishEvaluator>().AsSingle();
+            Container.Bind(typeof(IInitializable), typeof(IDisposable)).To<LevelFinishHandler>().AsSingle().NonLazy();
 
             Container.BindInterfacesTo<PerksApplier>().AsSingle();
             Container.Bind<IPerkProvider>().To<RandomPerkProvider>().AsSingle();
@@ -104,10 +108,17 @@ namespace TapTapTap.Core
             Container.Bind<IEncounterResolver>().To<EncounterResolver>().AsSingle();
 
             Container.Bind(typeof(IInputResolver)).To<InputResolver>().AsSingle();
-            
-            InventoryInstaller.Install(Container);
+
             ConfigurableTickablesInstaller.Install(Container);
             DateTimeProviderInstaller.Install(Container);
+
+            InstallCheats();
+        }
+
+        private void InstallCheats()
+        {
+            Container.Bind<ShowScreenCheats>().AsSingle();
+            Container.Bind<ITickable>().To<Cheats>().AsSingle();
         }
 
         private void InstallTimers()

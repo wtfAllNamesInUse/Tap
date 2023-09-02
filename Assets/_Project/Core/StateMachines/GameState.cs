@@ -1,4 +1,10 @@
-public enum GameState
+namespace TapTapTap.Core
 {
-    NewGame,
+    public enum GameState
+    {
+        NewGame,
+        TimesUp,
+        Defeat,
+        Finish,
+    }
 }

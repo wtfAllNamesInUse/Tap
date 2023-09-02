@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671459498715919559}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6930122694965717509}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4142715627474073102
 SpriteRenderer:
@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 1583072340625994603}
   - component: {fileID: 6491913702539827632}
   - component: {fileID: 1743733580368561055}
+  - component: {fileID: -3715452741219383515}
   m_Layer: 0
   m_Name: Chest Wooden
   m_TagString: Untagged
@@ -110,6 +111,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6930122694965717508}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -117,7 +119,6 @@ Transform:
   m_Children:
   - {fileID: 3615272710834565069}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1583072340625994603
 MonoBehaviour:
@@ -164,5 +165,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 619eb0923239441b298880dfd5f5183e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-3715452741219383515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6930122694965717508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb388bf763a34fa6a28e33e56dc523e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

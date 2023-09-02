@@ -23,7 +23,16 @@ namespace TapTapTap.Core
             }
         }
 
-        public List<InventoryItemModel> Items => items;
+        public List<InventoryItemModel> Items {
+            get {
+                var result = new List<InventoryItemModel>(items.Count);
+                foreach (var item in items) {
+                    result.Add(item.DeepCopy());
+                }
+
+                return result;
+            }
+        }
 
         [SerializeField]
         private string collectibleName;

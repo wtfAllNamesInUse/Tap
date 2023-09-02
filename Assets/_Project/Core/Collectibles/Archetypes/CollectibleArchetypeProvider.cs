@@ -1,3 +1,5 @@
+using TapTapTap.Archetypes;
+
 namespace TapTapTap.Core
 {
     public class CollectibleArchetypeProvider : IArchetypeProvider<CollectibleArchetype>

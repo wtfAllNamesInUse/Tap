@@ -1,3 +1,5 @@
+using TapTapTap.Archetypes;
+
 namespace TapTapTap.Core
 {
     public class EntityArchetypeProvider : IArchetypeProvider<EntityArchetype>

@@ -28,12 +28,16 @@ namespace TapTapTap.Core
         public override void Dispose()
         {
             base.Dispose();
-            
+
             signalBus.Unsubscribe<GameStateChangedSignal>(OnGameStateChanged);
         }
 
         private void OnGameStateChanged(GameStateChangedSignal signal)
         {
+            if (signal.NewGameState != GameState.NewGame) {
+                return;
+            }
+
             GetTimer(GlobalTimer).Start();
         }
     }

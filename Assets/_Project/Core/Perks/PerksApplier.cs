@@ -34,6 +34,10 @@ namespace TapTapTap.Core
 
         private void OnGameStateChanged(GameStateChangedSignal signal)
         {
+            if (signal.NewGameState != GameState.NewGame) {
+                return;
+            }
+            
             var allPerks = perksConfig.Perks;
             foreach (var perkArchetype in allPerks) {
                 var count = savedData.GetPerkCount(perkArchetype.PerkName);

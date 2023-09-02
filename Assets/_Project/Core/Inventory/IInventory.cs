@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 
 namespace TapTapTap.Inventory
 {
-    public interface IInventory : IDisposable
+    public interface IInventory : IDisposable, IEnumerable<InventoryItemModel>
     {
         event Action<InventoryItemModel> ItemModified; 
 

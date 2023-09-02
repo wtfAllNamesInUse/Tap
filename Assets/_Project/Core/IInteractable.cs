@@ -1,8 +1,10 @@
+using System.Threading.Tasks;
+
 namespace TapTapTap.Core
 {
     public interface IInteractable
     {
         bool IsResolvingRequired { get; }
-        void ExecuteInteraction(Entity interactingWith, InteractionResolveState interactionResolveState);
+        Task ExecuteInteraction(Entity interactingWith, InteractionResolveState interactionResolveState);
     }
 }

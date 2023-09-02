@@ -1,11 +1,15 @@
 using System;
-using TapTapTap.Inventory;
+using TapTapTap.Archetypes;
 using Zenject;
 
-public class InventoryInstaller : Installer<InventoryInstaller>
+namespace TapTapTap.Inventory
 {
-    public override void InstallBindings()
+    public class InventoryInstaller : Installer<InventoryInstaller>
     {
-        Container.Bind(typeof(IDisposable), typeof(IInventory)).To<Inventory>().AsSingle();
+        public override void InstallBindings()
+        {
+            Container.Bind(typeof(IDisposable), typeof(IInventory)).To<Inventory>().AsSingle();
+            Container.Bind<IArchetypeProvider<InventoryItemArchetype>>().To<InventoryItemArchetypeProvider>().AsSingle();
+        }
     }
 }

@@ -35,6 +35,16 @@ namespace TapTapTap.Inventory
             this.count = count;
         }
 
+        public InventoryItemModel DeepCopy()
+        {
+            var info = new InventoryItemModel {
+                ItemName = itemName,
+                Count = count,
+            };
+
+            return info;
+        }
+
         private static void OnSpawned(string itemName, int count, InventoryItemModel itemModel)
         {
             itemModel.ItemName = itemName;

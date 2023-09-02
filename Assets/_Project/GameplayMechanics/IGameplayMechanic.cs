@@ -1,4 +1,4 @@
-namespace TapTapTap.Core
+namespace TapTapTap.GameplayMechanics
 {
     public interface IGameplayMechanic<TGameplayMechanicModel>
         where TGameplayMechanicModel : BaseGameplayMechanicModel

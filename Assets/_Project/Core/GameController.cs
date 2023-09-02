@@ -46,6 +46,10 @@ namespace TapTapTap.Core
 
         private async void OnGameStateChanged(GameStateChangedSignal signal)
         {
+            if (signal.NewGameState != GameState.NewGame) {
+                return;
+            }
+
             gameStateData.Player = spawner
                 .Spawn<Entity>("PLAYER", positionProvider.PlayerStart);
             gameStateData.OriginalPlayerPosition = gameStateData.Player.transform.position;
@@ -55,15 +59,6 @@ namespace TapTapTap.Core
             await tutorialsContainer.TryShowTutorials();
 
             screenController.ShowScreen<StatsBarScreen>();
-        }
-
-        private void OnClick()
-        {
-            // if (playerInputBlocker.IsBlocked || !Player.IsAlive) {
-            //     return;
-            // }
-            //
-            // Player.TryAttack();
         }
     }
 }

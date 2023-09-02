@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-namespace TapTapTap.Core
+namespace TapTapTap.GameplayMechanics
 {
     [Serializable]
-    public class BaseGameplayMechanicModel : ScriptableObject //, IGameplayMechanicModel
+    public class BaseGameplayMechanicModel : ScriptableObject
     {
         public string id;
         public bool isEnabled;

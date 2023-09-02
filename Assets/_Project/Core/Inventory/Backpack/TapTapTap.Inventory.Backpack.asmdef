@@ -1,0 +1,14 @@
+{
+    "name": "TapTapTap.Inventory.Backpack",
+    "rootNamespace": "TapTapTap.Inventory.Backpack",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

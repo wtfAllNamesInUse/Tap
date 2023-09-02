@@ -15,3 +15,4 @@ MonoBehaviour:
   archetypes:
   - {fileID: 11400000, guid: 9f9c6fa394bce3a4bb0aa47f3f54f5a9, type: 2}
   - {fileID: 11400000, guid: db7b11e26a92e4599ad3dce7d167d964, type: 2}
+  - {fileID: 11400000, guid: 874f13657f1f6429b8d625d0c4ffb516, type: 2}

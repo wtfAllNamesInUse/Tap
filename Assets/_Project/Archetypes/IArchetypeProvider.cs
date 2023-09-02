@@ -1,4 +1,4 @@
-namespace TapTapTap.Core
+namespace TapTapTap.Archetypes
 {
     public interface IArchetypeProvider<TArchetype>
     {

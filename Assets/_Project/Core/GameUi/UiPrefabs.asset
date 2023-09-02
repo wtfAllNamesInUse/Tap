@@ -29,3 +29,5 @@ MonoBehaviour:
     gameObject: {fileID: 7063492696373076551, guid: 0cc8031285ee64f94ba34a24dc20841e, type: 3}
   - name: InteractionScreen
     gameObject: {fileID: 7063492696373076551, guid: 37cd83652155a4203b77801f048eae13, type: 3}
+  - name: BackpackScreen
+    gameObject: {fileID: 7063492696373076551, guid: 9e262dea6fb964c1dad3248e752c9b9b, type: 3}

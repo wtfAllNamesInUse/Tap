@@ -1,4 +1,3 @@
-using TapTapTap.Ui;
 using Zenject;
 
 namespace TapTapTap.Core
@@ -7,18 +6,18 @@ namespace TapTapTap.Core
     {
         private readonly ITimer globalTimer;
         private readonly GameplaySettings gameplaySettings;
-        private readonly ScreenController screenController;
         private readonly GameStateData gameStateData;
+        private readonly SignalBus signalBus;
 
         public LevelFinishEvaluator(
             ITimersContainer timersContainer,
             GameplaySettings gameplaySettings,
-            ScreenController screenController,
-            GameStateData gameStateData)
+            GameStateData gameStateData,
+            SignalBus signalBus)
         {
             this.gameplaySettings = gameplaySettings;
-            this.screenController = screenController;
             this.gameStateData = gameStateData;
+            this.signalBus = signalBus;
 
             globalTimer = timersContainer.GetTimer(GameplayTimersContainer.GlobalTimer);
         }
@@ -31,20 +30,14 @@ namespace TapTapTap.Core
             }
 
             if (globalTimer.ElapsedSeconds >= gameplaySettings.LevelTimeS) {
-                screenController.ShowScreen<LevelCompletedScreen, LevelCompletedData>(
-                    new LevelCompletedData {
-                        LevelCompletedResult = LevelCompletedResult.TimesUp
-                    });
-                globalTimer.Stop();
-
-                player.Attributes.ApplyAttributeModifier(AttributeDefinition.Health, -float.MaxValue);
+                signalBus.Fire(new GameStateChangedSignal {
+                    NewGameState = GameState.TimesUp
+                });
             }
             else if (!player.IsAlive) {
-                screenController.ShowScreen<LevelCompletedScreen, LevelCompletedData>(
-                    new LevelCompletedData {
-                        LevelCompletedResult = LevelCompletedResult.Defeated
-                    });
-                globalTimer.Stop();
+                signalBus.Fire(new GameStateChangedSignal {
+                    NewGameState = GameState.Defeat
+                });
             }
         }
     }

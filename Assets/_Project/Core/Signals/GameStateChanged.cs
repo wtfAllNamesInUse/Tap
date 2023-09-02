@@ -1,4 +1,7 @@
-public class GameStateChangedSignal
+namespace TapTapTap.Core
 {
-    public GameState NewGameState;
+    public class GameStateChangedSignal
+    {
+        public GameState NewGameState;
+    }
 }

@@ -34,19 +34,12 @@ namespace TapTapTap.Core
 
         private string GetHeaderText()
         {
-            switch (CustomData.LevelCompletedResult) {
-                case LevelCompletedResult.TimesUp:
-                    return "Times Up!";
-
-                case LevelCompletedResult.Defeated:
-                    return "Defeated";
-
-                case LevelCompletedResult.Won:
-                    return "Level Won";
-
-                default:
-                    return "";
-            }
+            return CustomData.LevelCompletedResult switch {
+                LevelCompletedResult.TimesUp => "Times Up!",
+                LevelCompletedResult.Defeated => "Defeated",
+                LevelCompletedResult.Won => "Level Won",
+                _ => ""
+            };
         }
 
         public void OnRestartClicked()

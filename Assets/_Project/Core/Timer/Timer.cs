@@ -7,7 +7,7 @@ namespace TapTapTap.Core
     public class Timer : ITimer
     {
         public double ElapsedSeconds => ElapsedTime.TotalSeconds;
-        public TimeSpan ElapsedTime => DateTime.Now - dateTimeStart;
+        public TimeSpan ElapsedTime => dateTimeProvider.CurrentDateTime - dateTimeStart;
         public bool IsRunning => isRunning;
         public string Id => id;
 

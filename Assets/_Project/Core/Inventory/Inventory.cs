@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -80,6 +81,16 @@ namespace TapTapTap.Inventory
             itemModels.Remove(itemModelToModify);
             ItemModified?.Invoke(itemModelToModify);
             itemModelToModify.Dispose();
+        }
+
+        public IEnumerator<InventoryItemModel> GetEnumerator()
+        {
+            return itemModels.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
